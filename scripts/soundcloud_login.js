@@ -1,3 +1,7 @@
+var system = require('system');
+var user = system.env['CHANGETIP_BOT_USER'];
+var pass = system.env['CHANGETIP_BOT_PASS'];
+
 var casper = require('casper').create({
     pageSettings: {
         loadImages: false,
@@ -23,6 +27,8 @@ casper.waitForPopup(/connect\?/, function() {
 }, function() {
     console.log("Waiting for popup timed out at 15 seconds.");
 }, 15000);
+
+
 casper.run();
 
 
