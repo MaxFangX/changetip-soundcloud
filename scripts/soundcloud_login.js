@@ -1,6 +1,12 @@
 var system = require('system');
 var user = system.env['CHANGETIP_BOT_USER'];
 var pass = system.env['CHANGETIP_BOT_PASS'];
+if(user == undefined){
+    throw new Error("Need to set 'CHANGETIP_BOT_USER' environment variable")
+};
+if(pass == undefined){
+    throw new Error("Need to set CHANGETIP_BOT_PASS' environment variable");
+};
 
 //Make __utils__ accessible
 javascript:(function(){void(function(){if(!document.getElementById('CasperUtils')){var CasperUtils=document.createElement('script');CasperUtils.id='CasperUtils';CasperUtils.src='https://rawgit.com/n1k0/casperjs/master/modules/clientutils.js';document.documentElement.appendChild(CasperUtils);var interval=setInterval(function(){if(typeof ClientUtils==='function'){window.__utils__=new window.ClientUtils();clearInterval(interval);}},50);}}());})();
