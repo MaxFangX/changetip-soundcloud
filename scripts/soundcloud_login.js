@@ -23,9 +23,7 @@ casper.start('http://soundcloud.com', function(){
     
 });
 
-casper.wait(3000, function() {});
-
-casper.then(function() {
+casper.wait(3000, function() {
     console.log("**Clicked login button.");
     this.click('.header__login');
 });
