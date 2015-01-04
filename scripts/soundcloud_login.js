@@ -8,7 +8,6 @@ if(pass == undefined){
     throw new Error("Need to set CHANGETIP_BOT_PASS' environment variable");
 };
 
-
 //True to output as Python readable string.
 //False to output as JSON Object
 var outputAsString = true;
@@ -16,10 +15,18 @@ var outputAsString = true;
 var casper = require('casper').create({
     pageSettings: {
         loadImages: true,
-        loadPlugins: false,
+        loadPlugins: true,
     },
     verbose: true,
     logLevel: "debug"
+});
+
+casper.on('remote.message', function(msg) {
+    this.echo('REMOTE: ' + msg);
+});
+
+casper.on('page.error', function(msg, trace) {
+    this.echo('Error: ' + msg, 'ERROR');
 });
 
 casper.start('http://soundcloud.com', function(){
@@ -31,6 +38,8 @@ casper.start('http://soundcloud.com', function(){
     this.capture('isitloggedin.png');
     console.log("Is .g-tabs-item detected: " + 
         casper.exists('.g-tabs-item'));
+    console.log("Is .userNav__username detected: " +
+        casper.exists('.userNav__username'));
     //Skips trying to log in if already logged in
     if(casper.exists('.g-tabs-item')){
         casper.thenBypass(12);
@@ -145,9 +154,9 @@ casper.waitForSelector('.ownActivity', function() {
     this.capture(Math.round(new Date().getTime()/100)%100000+".png");
 
     //Scrape info
-    var output = this.evaluate(function() {
+    var output = this.evaluate(function(outputAsString) {
         var data = document.querySelectorAll('.ownActivity.comment');
-        
+
         var result = {}
         if(outputAsString){
             result = '{'
@@ -157,13 +166,13 @@ casper.waitForSelector('.ownActivity', function() {
             //TODO Clean up this disaster
             var comment = data[i];
             var commentId = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23)
-            //__utils__.echo("commentId: " + commentId);
+            console.log("commentId: " + commentId);
             var tipper = comment.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
-            __utils__.echo("tipper: " + tipper);
+            console.log("tipper: " + tipper);
             var tippee = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23, comment.children[1].children[1].children[0].children[1].children[0].href.substr(23).indexOf('/'));
-            __utils__.echo("tippee: " + tippee)
+            console.log("tippee: " + tippee)
             var text = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
-            __utils__.echo("text: " + text);
+            console.log("text: " + text);
 
             if(outputAsString){ //Output as strings
                 //Add escape characters so that it is Python readable
@@ -187,7 +196,7 @@ casper.waitForSelector('.ownActivity', function() {
         }
 
         return result;
-    });
+    }, outputAsString);
     casper.echo("Output: " + output);
 
 });
