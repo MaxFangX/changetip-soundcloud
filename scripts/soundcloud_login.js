@@ -132,7 +132,12 @@ casper.waitForPopup(/connect\?/, function() {
 //TODO implement scraping page
 casper.reload(function() {
     console.log("Reloaded notifications page");
-})
+});
+
+casper.waitForSelector('.ownActivity', function() {
+    //Screenshot with unique timestamp for every time the page refreshes
+    this.capture(Math.round(new Date().getTime()/100)%100000+".png");
+});
 
 
 casper.run();
@@ -165,3 +170,4 @@ casper.run();
 //Can maybe use this as unique identifier
 // document.querySelector('.ownActivity.comment .sc-link-light').href
 // "https://soundcloud.com/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
+//User <link>.substr(22) to get "/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
