@@ -18,6 +18,8 @@ var casper = require('casper').create({
 });
 
 casper.start('http://soundcloud.com', function(){
+    // TODO investigate why getting to soundcloud.com sometimes
+    // takes so long
     console.log("**Got to SoundCloud homepage.");
     console.log("Title: "+ this.getTitle());
     console.log("Next - clicking login button");
@@ -119,17 +121,15 @@ casper.waitForPopup(/connect\?/, function() {
         }));
     });
 
-    casper.thenOpen("http://soundcloud.com/notifications").then(
-        function() {
-            this.capture('444final.png')
-            console.log("Notification title: " + this.getTitle());
-        }
+    casper.thenOpen("http://soundcloud.com/notifications").waitForSelector('.ownActivity', function() {
+                this.capture('444final.png')
+                console.log("Notification title: " + this.getTitle());
+            }
     );
 }, 5000); //5 Seconds for popup to still be there
 
-var scrape = function() {
-
-}
+//SCRAPING PAGE
+//TODO implement scraping page
 
 casper.run();
 
