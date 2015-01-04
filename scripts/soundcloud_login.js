@@ -135,8 +135,30 @@ casper.reload(function() {
 });
 
 casper.waitForSelector('.ownActivity', function() {
+    console.log("Notifications page loaded, start SCRAPING");
     //Screenshot with unique timestamp for every time the page refreshes
     this.capture(Math.round(new Date().getTime()/100)%100000+".png");
+
+    //Scrape info
+    var data = this.evaluate(function() {
+        return document.querySelectorAll('.ownActivity.comment');
+    })
+    console.log("Data: " + data);
+
+    result = {}
+    for(var i = 0; i < data.length; i++){
+        //TODO Clean up this disaster
+        var comment = data[i];
+        var commentId = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23)
+        console.log("commentId: " + commentId);
+        var tipper = comment.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
+        console.log("tipper: " + tipper);
+        var tippee = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23, comment.children[1].children[1].children[0].children[1].children[0].href.substr(23).indexOf('/'));
+        console.log("tippee: " + tippee)
+        var text = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
+        console.log("text: " + text);
+        
+    }
 });
 
 
@@ -154,10 +176,19 @@ casper.run();
 //document.querySelector('.ownActivity.comment .userAvatarBadge__avatarLink').href
 //"http://soundcloud.com/maxtipper"
 
-//Get username
+//Get tipper username
 //document.querySelector('.ownActivity.comment .userBadge__usernameLink').innerHTML
 //document.querySelector('.ownActivity.comment').children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
 //"maxtipper"
+
+//Get link to comment including comment id + example output
+//Get tippee username
+//Can maybe use this as unique identifier
+// document.querySelector('.ownActivity.comment .sc-link-light').href
+// document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[1].children[0].href
+// "https://soundcloud.com/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
+//User <link>.substr(23) to get "maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
+//Use <link>.substr(23, <link>.substr(23).indexOf('/')) to get "maxtippee"
 
 //Get text + example output
 // document.querySelector('.ownActivity.comment .commentTitle__quotedBody').innerHTML
@@ -167,10 +198,3 @@ casper.run();
 //         @<a href="/maxtippee">maxtippee</a>: 103 bits
       
 //     "
-
-//Get link to comment including comment id + example output
-//Can maybe use this as unique identifier
-// document.querySelector('.ownActivity.comment .sc-link-light').href
-// document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[1].children[0].href
-// "https://soundcloud.com/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
-//User <link>.substr(22) to get "/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
