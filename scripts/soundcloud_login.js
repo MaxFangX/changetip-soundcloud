@@ -130,6 +130,10 @@ casper.waitForPopup(/connect\?/, function() {
 
 //SCRAPING PAGE
 //TODO implement scraping page
+casper.reload(function() {
+    console.log("Reloaded notifications page");
+})
+
 
 casper.run();
 
