@@ -91,12 +91,18 @@ casper.withPopup(/.*/, function() {
 
 
 casper.then(function() {
-    this.capture('333final.png')
+    this.capture('333loggedin.png')
     console.log(this.evaluate(function() {
         return document.title;
-    }))
-})
+    }));
+});
 
+casper.thenOpen("http://soundcloud.com/notifications").then(
+    function() {
+        this.capture('444final.png')
+        console.log(this.getTitle());
+    }
+);
 casper.run();
 
 
