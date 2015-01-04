@@ -24,11 +24,11 @@ casper.start('http://soundcloud.com', function(){
     this.capture('isitloggedin.png');
     console.log("Is .g-tabs-item detected: " + 
         casper.exists('.g-tabs-item'));
+    //Skips trying to log in if already logged in
+    if(casper.exists('.g-tabs-item')){
+        casper.thenBypass(12);
+    }
 });
-
-//STEP 3
-//Skips trying to log in if already logged in
-casper.thenBypassIf(casper.exists('.g-tabs-item'), 14);
 
 //div.header__userNav
 
@@ -40,6 +40,7 @@ casper.waitForSelector('.header__login', function() {
     throw new Error("Could not find login button");
 }, 30000);
 
+//STEP 6
 casper.waitForPopup(/connect/, function() {
     console.log('**Loaded login popup.');
     console.log("casper.popups length: " + casper.popups.length);
