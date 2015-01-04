@@ -156,10 +156,12 @@ casper.run();
 
 //Get username
 //document.querySelector('.ownActivity.comment .userBadge__usernameLink').innerHTML
+//document.querySelector('.ownActivity.comment').children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
 //"maxtipper"
 
 //Get text + example output
 // document.querySelector('.ownActivity.comment .commentTitle__quotedBody').innerHTML
+//document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[0].children[1].innerHTML
 // "
       
 //         @<a href="/maxtippee">maxtippee</a>: 103 bits
@@ -169,5 +171,6 @@ casper.run();
 //Get link to comment including comment id + example output
 //Can maybe use this as unique identifier
 // document.querySelector('.ownActivity.comment .sc-link-light').href
+// document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[1].children[0].href
 // "https://soundcloud.com/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
 //User <link>.substr(22) to get "/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
