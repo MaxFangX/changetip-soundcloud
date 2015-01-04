@@ -8,6 +8,7 @@ if(pass == undefined){
     throw new Error("Need to set CHANGETIP_BOT_PASS' environment variable");
 };
 
+
 //True to output as Python readable string.
 //False to output as JSON Object
 var outputAsString = true;
@@ -144,49 +145,50 @@ casper.waitForSelector('.ownActivity', function() {
     this.capture(Math.round(new Date().getTime()/100)%100000+".png");
 
     //Scrape info
-    var data = this.evaluate(function() {
-        return document.querySelectorAll('.ownActivity.comment');
-    })
-    console.log("Data: " + data);
-
-    result = {}
-    if(outputAsString){
-        result = '{'
-    }
-    for(var i = 0; i < data.length; i++){
-        //Get info
-        //TODO Clean up this disaster
-        var comment = data[i];
-        var commentId = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23)
-        console.log("commentId: " + commentId);
-        var tipper = comment.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
-        console.log("tipper: " + tipper);
-        var tippee = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23, comment.children[1].children[1].children[0].children[1].children[0].href.substr(23).indexOf('/'));
-        console.log("tippee: " + tippee)
-        var text = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
-        console.log("text: " + text);
-
-        if(outputAsString){ //Output as strings
-            //Add escape characters so that it is Python readable
-            text = text.replace(/"/g, "\\\"")
-            result += i + ": {";
-            result += "'comment_id': " + "'" + commentId + "', ";
-            result += "'tipper': " + "'" + tipper + "', ";
-            result += "'tippee': " + "'" + tipper + "', ";
-            result += "'text': " + "\"" + text + "\"}, ";
-        }else{ //Add info to result to output as JSON object
-            result[i] = {};
-            result[i]['id'] = commentId;
-            result[i]['tipper'] = tipper;
-            result[i]['tippee'] = tippee;
-            result[i]['text'] = text;
-        }
+    var output = this.evaluate(function() {
+        var data = document.querySelectorAll('.ownActivity.comment');
         
-    }
-    if(outputAsString){
-        result += "}"
-    }
-    casper.echo(result);
+        var result = {}
+        if(outputAsString){
+            result = '{'
+        }
+        for(var i = 0; i < data.length; i++){
+            //Get info
+            //TODO Clean up this disaster
+            var comment = data[i];
+            var commentId = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23)
+            //__utils__.echo("commentId: " + commentId);
+            var tipper = comment.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
+            __utils__.echo("tipper: " + tipper);
+            var tippee = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23, comment.children[1].children[1].children[0].children[1].children[0].href.substr(23).indexOf('/'));
+            __utils__.echo("tippee: " + tippee)
+            var text = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
+            __utils__.echo("text: " + text);
+
+            if(outputAsString){ //Output as strings
+                //Add escape characters so that it is Python readable
+                text = text.replace(/"/g, "\\\"")
+                result += i + ": {";
+                result += "'comment_id': " + "'" + commentId + "', ";
+                result += "'tipper': " + "'" + tipper + "', ";
+                result += "'tippee': " + "'" + tipper + "', ";
+                result += "'text': " + "\"" + text + "\"}, ";
+            }else{ //Add info to result to output as JSON object
+                result[i] = {};
+                result[i]['id'] = commentId;
+                result[i]['tipper'] = tipper;
+                result[i]['tippee'] = tippee;
+                result[i]['text'] = text;
+            }
+            
+        }
+        if(outputAsString){
+            result += "}"
+        }
+
+        return result;
+    });
+    casper.echo("Output: " + output);
 
 });
 
