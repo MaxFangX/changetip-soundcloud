@@ -133,4 +133,31 @@ var scrape = function() {
 
 casper.run();
 
+//Get all notifications
+//('.ownActivity')
+//An array
 
+//Get all mention notifications
+//document.querySelectorAll('.ownActivity.comment')
+//An array
+
+//Get link to commenter profile
+//document.querySelector('.ownActivity.comment .userAvatarBadge__avatarLink').href
+//"http://soundcloud.com/maxtipper"
+
+//Get username
+//document.querySelector('.ownActivity.comment .userBadge__usernameLink').innerHTML
+//"maxtipper"
+
+//Get text + example output
+// document.querySelector('.ownActivity.comment .commentTitle__quotedBody').innerHTML
+// "
+      
+//         @<a href="/maxtippee">maxtippee</a>: 103 bits
+      
+//     "
+
+//Get link to comment including comment id + example output
+//Can maybe use this as unique identifier
+// document.querySelector('.ownActivity.comment .sc-link-light').href
+// "https://soundcloud.com/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
