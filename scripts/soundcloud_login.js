@@ -13,7 +13,7 @@ var casper = require('casper').create({
         loadImages: false,
         loadPlugins: false,
     },
-    verbose: false,
+    verbose: true,
     logLevel: "debug"
 });
 
@@ -81,6 +81,7 @@ casper.withPopup(/.*/, function() {
         return document.querySelector('#recaptcha_area');
     }))
     if(casper.exists('#recaptcha_area')){
+        this.capture('error.png');
         throw new Error("Ran into recaptcha, use a proxy.");
     }
     else{
@@ -92,7 +93,7 @@ casper.withPopup(/.*/, function() {
 
 casper.then(function() {
     this.capture('333loggedin.png')
-    console.log(this.evaluate(function() {
+    console.log("Logged in title: " + this.evaluate(function() {
         return document.title;
     }));
 });
@@ -100,7 +101,7 @@ casper.then(function() {
 casper.thenOpen("http://soundcloud.com/notifications").then(
     function() {
         this.capture('444final.png')
-        console.log(this.getTitle());
+        console.log("Notification title: " + this.getTitle());
     }
 );
 casper.run();
