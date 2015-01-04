@@ -23,10 +23,12 @@ casper.start('http://soundcloud.com', function(){
     
 });
 
-casper.wait(3000, function() {
+casper.waitForSelector('.header__login', function() {
     console.log("**Clicked login button.");
     this.click('.header__login');
-});
+}, function(){
+    throw new Error("Could not click login button");
+}, 30000);
 
 casper.waitForPopup(/connect\?/, function() {
     console.log('**Loaded login popup.');
