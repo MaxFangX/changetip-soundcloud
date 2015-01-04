@@ -10,7 +10,7 @@ if(pass == undefined){
 
 var casper = require('casper').create({
     pageSettings: {
-        loadImages: false,
+        loadImages: true,
         loadPlugins: false,
     },
     verbose: true,
@@ -21,15 +21,23 @@ casper.start('http://soundcloud.com', function(){
     console.log("**Got to SoundCloud homepage.");
     console.log("Title: "+ this.getTitle());
     console.log("Next - clicking login button");
-    this.capture('shouldbeloggedin.png');
+    this.capture('isitloggedin.png');
+    console.log("Is .g-tabs-item detected: " + 
+        casper.exists('.g-tabs-item'));
 });
+
+//STEP 3
+//Skips trying to log in if already logged in
+casper.thenBypassIf(casper.exists('.g-tabs-item'), 14);
+
+//div.header__userNav
 
 casper.waitForSelector('.header__login', function() {
     console.log("**Clicked login button.");
     this.click('.header__login');
     console.log("Next - loading popup");
 }, function(){
-    throw new Error("Could not click login button");
+    throw new Error("Could not find login button");
 }, 30000);
 
 casper.waitForPopup(/connect/, function() {
