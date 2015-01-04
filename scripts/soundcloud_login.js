@@ -72,38 +72,47 @@ casper.then(function() {
 })
 casper.wait(3000, function(){});
 
-casper.withPopup(/.*/, function() {
-    //this.capture('222popup.png');
-    console.log(this.evaluate(function() {
-        return document.title;
-    }))
-    console.log(this.evaluate(function() {
-        return document.querySelector('#recaptcha_area');
-    }))
-    if(casper.exists('#recaptcha_area')){
-        this.capture('error.png');
-        throw new Error("Ran into recaptcha, use a proxy.");
-    }
-    else{
-        console.log("****Logged in successfully!");
-        console.log("Popups length: " + this.popups.length)
-    }  
-})
-
-
-casper.then(function() {
-    this.capture('333loggedin.png')
-    console.log("Logged in title: " + this.evaluate(function() {
-        return document.title;
-    }));
+casper.then(function(){
+    console.log("Checking if login popup still exists");
+    console.log("popups.length: " + this.popups.length);
 });
 
-casper.thenOpen("http://soundcloud.com/notifications").then(
-    function() {
-        this.capture('444final.png')
-        console.log("Notification title: " + this.getTitle());
-    }
-);
+casper.waitForPopup(/connect\?/, function() {
+    casper.withPopup(/connect\?/, function() {
+        //this.capture('222popup.png');
+        console.log(this.evaluate(function() {
+            return document.title;
+        }))
+        console.log(this.evaluate(function() {
+            return document.querySelector('#recaptcha_area');
+        })) 
+        if(casper.exists('#recaptcha_area')){
+            this.capture('error1.png');
+            throw new Error("Ran into recaptcha, use a proxy.");
+        }
+        else{
+            console.log('Somehow got a popup without captcha');
+            this.capture('error2.png');
+        } 
+    });
+}, function() {
+    casper.then(function() {
+        console.log("****Logged in successfully!");
+        console.log("Popups length: " + this.popups.length)
+        this.capture('333loggedin.png')
+        console.log("Logged in title: " + this.evaluate(function() {
+            return document.title;
+        }));
+    });
+
+    casper.thenOpen("http://soundcloud.com/notifications").then(
+        function() {
+            this.capture('444final.png')
+            console.log("Notification title: " + this.getTitle());
+        }
+    );
+}, 5000); //5 Seconds for popup to still be there
+
 casper.run();
 
 
