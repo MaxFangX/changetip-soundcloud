@@ -8,6 +8,10 @@ if(pass == undefined){
     throw new Error("Need to set CHANGETIP_BOT_PASS' environment variable");
 };
 
+//True to output as Python readable string.
+//False to output as JSON Object
+var outputAsString = true;
+
 var casper = require('casper').create({
     pageSettings: {
         loadImages: true,
@@ -146,6 +150,9 @@ casper.waitForSelector('.ownActivity', function() {
     console.log("Data: " + data);
 
     result = {}
+    if(outputAsString){
+        result = '{'
+    }
     for(var i = 0; i < data.length; i++){
         //Get info
         //TODO Clean up this disaster
@@ -159,13 +166,28 @@ casper.waitForSelector('.ownActivity', function() {
         var text = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
         console.log("text: " + text);
 
-        //Add info to result
-        result[i] = {};
-        result[i]['id'] = commentId;
-        result[i]['tipper'] = tipper;
-        result[i]['tippee'] = tippee;
-        result[i]['text'] = text;
+        if(outputAsString){ //Output as strings
+            //Add escape characters so that it is Python readable
+            text = text.replace(/"/g, "\\\"")
+            result += i + ": {";
+            result += "'comment_id': " + "'" + commentId + "', ";
+            result += "'tipper': " + "'" + tipper + "', ";
+            result += "'tippee': " + "'" + tipper + "', ";
+            result += "'text': " + "\"" + text + "\"}, ";
+        }else{ //Add info to result to output as JSON object
+            result[i] = {};
+            result[i]['id'] = commentId;
+            result[i]['tipper'] = tipper;
+            result[i]['tippee'] = tippee;
+            result[i]['text'] = text;
+        }
+        
     }
+    if(outputAsString){
+        result += "}"
+    }
+    casper.echo(result);
+
 });
 
 
