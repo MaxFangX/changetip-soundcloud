@@ -147,6 +147,7 @@ casper.waitForSelector('.ownActivity', function() {
 
     result = {}
     for(var i = 0; i < data.length; i++){
+        //Get info
         //TODO Clean up this disaster
         var comment = data[i];
         var commentId = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23)
@@ -157,7 +158,13 @@ casper.waitForSelector('.ownActivity', function() {
         console.log("tippee: " + tippee)
         var text = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
         console.log("text: " + text);
-        
+
+        //Add info to result
+        result[i] = {};
+        result[i]['id'] = commentId;
+        result[i]['tipper'] = tipper;
+        result[i]['tippee'] = tippee;
+        result[i]['text'] = text;
     }
 });
 
