@@ -20,22 +20,27 @@ var casper = require('casper').create({
 casper.start('http://soundcloud.com', function(){
     console.log("**Got to SoundCloud homepage.");
     console.log("Title: "+ this.getTitle());
-    
+    console.log("Next - clicking login button");
+    this.capture('shouldbeloggedin.png');
 });
 
 casper.waitForSelector('.header__login', function() {
     console.log("**Clicked login button.");
     this.click('.header__login');
+    console.log("Next - loading popup");
 }, function(){
     throw new Error("Could not click login button");
 }, 30000);
 
-casper.waitForPopup(/connect\?/, function() {
+casper.waitForPopup(/connect/, function() {
     console.log('**Loaded login popup.');
     console.log("casper.popups length: " + casper.popups.length);
     console.log("casper.popups[0]: " + casper.popups[0]);
+    console.log("Next - filling out form");
 }, function() {
     console.log("Waiting for popup timed out at 30 seconds.");
+    console.log("Popups.length: " + this.popups.length);
+    throw new Error("Login popup didn't load");
 }, 30000);
 
 casper.withPopup(/connect\?/, function() {
@@ -44,15 +49,15 @@ casper.withPopup(/connect\?/, function() {
     if(this.exists('#oauth2-login-form')){
         console.log("oauth2 form exists");
     };
-
     this.fillSelectors('#oauth2-login-form', {
         'input[id="username"]': user,
         'input[id="password"]': pass,
     }, false);
-    console.log("Printing username form value");
+    console.log("Printing username form value: ");
     console.log(this.evaluate(function() {
         return document.querySelector('#username').value;
-    }));    
+    }));
+    console.log("Next - clicking login button on popup");
 });
 
 casper.wait(3000, function() {});
@@ -66,9 +71,7 @@ casper.withPopup(/connect\?/, function() {
     this.click('#authorize');
 });
 
-casper.wait(3000, function(){});
-
-casper.then(function() {
+casper.wait(3000, function() {
     //this.capture('111mainpage.png');
     console.log("POPUPS.LENGTH: "+ casper.popups.length);
 })
@@ -114,6 +117,10 @@ casper.waitForPopup(/connect\?/, function() {
         }
     );
 }, 5000); //5 Seconds for popup to still be there
+
+var scrape = function() {
+
+}
 
 casper.run();
 
