@@ -1,4 +1,4 @@
-from bot import SlackBot
+from bot import SoundCloudBot
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 
@@ -12,7 +12,7 @@ def command_webhook(request):
     usage = "Usage: /tip @tippee $amount"
     text = request.POST.get("text", "")
 
-    bot = SlackBot()
+    bot = SoundCloudBot()
 
     # Check for mention
     mentions = bot.get_mentions(text)
