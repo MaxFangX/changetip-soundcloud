@@ -10,7 +10,7 @@ if(pass == undefined){
 
 //True to output as Python readable string.
 //False to output as JSON Object
-var outputAsString = true;
+var outputAsString = false;
 
 var printEnabled = false;
 var printIfEnabled = function(whateverstringidgaf) {
@@ -198,6 +198,8 @@ casper.waitForSelector('.ownActivity', function() {
         }
         if(outputAsString){
             result += "}"
+        }else{
+            result = JSON.stringify(result);
         }
 
         return result;
