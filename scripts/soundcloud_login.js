@@ -182,8 +182,6 @@ casper.waitForSelector('.ownActivity', function() {
             console.log("text: " + text);
 
             if(outputAsString){ //Output as strings
-                //Add escape characters so that it is Python readable
-                text = text.replace(/"/g, "\\\"")
                 result += i + ": {";
                 result += "'comment_id': " + "'" + commentId + "', ";
                 result += "'tipper': " + "'" + tipper + "', ";
