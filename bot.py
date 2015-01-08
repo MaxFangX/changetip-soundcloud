@@ -22,8 +22,8 @@ def testbot():
 	out, err = p.communicate()
 	info = json.loads(out.decode('utf-8'))
 	for index in info: #Changes str int indexes to int indexes
-	info[int(index)] = info.pop(index)
-	
+		info[int(index)] = info.pop(index)
+
 	print("Out: ")
 	print(out)
 	print("Info: ")
