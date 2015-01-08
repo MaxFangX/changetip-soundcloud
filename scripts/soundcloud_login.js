@@ -204,7 +204,7 @@ casper.waitForSelector('.ownActivity', function() {
 
         return result;
     }, outputAsString);
-    casper.echo("Output: ");
+    //casper.echo("Output: ");
     casper.echo(output);
 
 });
