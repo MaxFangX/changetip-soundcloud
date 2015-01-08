@@ -1,4 +1,5 @@
-import subprocess, time
+import json
+import subprocess
 
 from changetip.bots.base import BaseBot
 
@@ -9,19 +10,21 @@ class SoundCloudBot(BaseBot):
 
 #TESTING AREA BELOW
 
+info = {}
 out = ''
 
 def testbot():
+	print("running testbot()")
 	p = subprocess.Popen(['casperjs', 'scripts/soundcloud_login.js'],
 				stdout=subprocess.PIPE,
 				stderr=subprocess.PIPE)
-	print("starting sleep")
-	time.sleep(10)
-	print("ending sleep")
-	global out
+	global info, out
 	out, err = p.communicate()
-	
+	info = json.loads(out.decode('utf-8'))
+	print("Out: ")
 	print(out)
+	print("Info: ")
+	print(info)
 
 
 
