@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'soundcloud',
+    'bot',
 )
 
 MIDDLEWARE_CLASSES = (
