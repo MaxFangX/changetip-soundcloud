@@ -7,8 +7,8 @@ from django.utils.html import strip_tags
 
 
 class SoundCloudBot(BaseBot):
-	changetip_api_key = os.getenv("CHANGETIP_API_KEY", "fake_key")
-	assert changetip_api_key != "fake_key", "Need to set CHANGETIP_API_KEY environment variable"
+    changetip_api_key = os.getenv("CHANGETIP_API_KEY", "fake_key")
+    assert changetip_api_key != "fake_key", "Need to set CHANGETIP_API_KEY environment variable"
 
     username = "maxtipbot"  # username on the site
     prefix = "@"
@@ -80,14 +80,14 @@ info = {}
 out = ''
 
 def testbot():
-	print("running testbot()")
-	p = subprocess.Popen(['casperjs', 'scripts/soundcloud_login.js'],
-				stdout=subprocess.PIPE,
-				stderr=subprocess.PIPE)
-	global info, out
-	out, err = p.communicate()
-	info = json.loads(out.decode('utf-8'))
-	for index in info:
+    print("running testbot()")
+    p = subprocess.Popen(['casperjs', 'scripts/soundcloud_login.js'],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+    global info, out
+    out, err = p.communicate()
+    info = json.loads(out.decode('utf-8'))
+    for index in info:
         #Remove HTML tags from soundcloud text
 		info[index]['text'] = strip_tags(info[index]['text']).replace('\n', '')
         #Changes str int indexes to int indexes
