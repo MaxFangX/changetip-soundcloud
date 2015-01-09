@@ -27,7 +27,17 @@ class SoundCloudBot(BaseBot):
 
     def check_for_new_tips(self, last):
         """ Poll the site for new tips. Expected to return an array of tips, in the format passed to send_tip """
-        pass #TODO
+        print("running testbot()")
+        p = subprocess.Popen(['casperjs', 
+                            'scripts/soundcloud_login.js'],
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+        out, err = p.communicate()
+        info = json.loads(out.decode('utf-8'))
+        for index in info:
+            info[index]['text'] = strip_tags(info[index]['text']).replace('\n', '')
+            info[int(index)] = info.pop(index)
+        return info
     
     # def send_tip(self, sender, receiver, message, context_uid, meta):
 
@@ -77,9 +87,11 @@ def testbot():
 	global info, out
 	out, err = p.communicate()
 	info = json.loads(out.decode('utf-8'))
-	for index in info: #Changes str int indexes to int indexes
+	for index in info:
+        #Remove HTML tags from soundcloud text
 		info[index]['text'] = strip_tags(info[index]['text']).replace('\n', '')
-		info[int(index)] = info.pop(index)
+        #Changes str int indexes to int indexes
+		info[int(index)] = info.pop(index) 
 
 	print("Out: ")
 	print(out)
