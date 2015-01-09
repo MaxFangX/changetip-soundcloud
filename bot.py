@@ -3,6 +3,7 @@ import subprocess
 import os
 
 from changetip.bots.base import BaseBot
+from django.utils.html import strip_tags
 
 
 class SoundCloudBot(BaseBot):
@@ -77,6 +78,7 @@ def testbot():
 	out, err = p.communicate()
 	info = json.loads(out.decode('utf-8'))
 	for index in info: #Changes str int indexes to int indexes
+		info[index]['text'] = strip_tags(info[index]['text'])
 		info[int(index)] = info.pop(index)
 
 	print("Out: ")
