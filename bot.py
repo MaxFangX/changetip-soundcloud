@@ -78,7 +78,7 @@ def testbot():
 	out, err = p.communicate()
 	info = json.loads(out.decode('utf-8'))
 	for index in info: #Changes str int indexes to int indexes
-		info[index]['text'] = strip_tags(info[index]['text'])
+		info[index]['text'] = strip_tags(info[index]['text']).replace('\n', '')
 		info[int(index)] = info.pop(index)
 
 	print("Out: ")
