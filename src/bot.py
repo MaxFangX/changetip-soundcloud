@@ -3,7 +3,7 @@ import subprocess
 import os
 
 from changetip.bots.base import BaseBot
-from django.utils.html import strip_tags
+from strip import strip_tags
 
 
 class SoundCloudBot(BaseBot):
