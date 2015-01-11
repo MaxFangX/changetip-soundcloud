@@ -1,6 +1,7 @@
 import json
 import subprocess
 import os
+import re
 
 from changetip.bots.base import BaseBot
 
@@ -34,7 +35,9 @@ class SoundCloudBot(BaseBot):
         out, err = p.communicate()
         info = json.loads(out.decode('utf-8'))
         for index in info:
-            info[index]['text'] = strip_tags(info[index]['text']).replace('\n', '')
+            info[index]['text'] = re.sub('<[^<]+?>', 
+                                        '', 
+                                        info[index]['text'].replace('\n', ''))
             info[int(index)] = info.pop(index)
         return info
     
@@ -88,7 +91,9 @@ def testbot():
     info = json.loads(out.decode('utf-8'))
     for index in info:
         #Remove HTML tags from soundcloud text
-        info[index]['text'] = info[index]['text'].replace('\n', '')
+        info[index]['text'] = re.sub('<[^<]+?>', 
+                                    '', 
+                                    info[index]['text'].replace('\n', ''))
         #Changes str int indexes to int indexes
         info[int(index)] = info.pop(index) 
 
