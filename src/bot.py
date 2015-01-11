@@ -29,7 +29,7 @@ class SoundCloudBot(BaseBot):
         """ Poll the site for new tips. Expected to return an array of tips, in the format passed to send_tip """
         print("running testbot()")
         p = subprocess.Popen(['casperjs', 
-                            'scripts/soundcloud_login.js'],
+                            '../scripts/soundcloud_login.js'],
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
         out, err = p.communicate()
