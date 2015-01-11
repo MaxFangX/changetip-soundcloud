@@ -3,7 +3,6 @@ import subprocess
 import os
 
 from changetip.bots.base import BaseBot
-from strip import strip_tags
 
 
 class SoundCloudBot(BaseBot):
@@ -81,7 +80,7 @@ out = ''
 
 def testbot():
     print("running testbot()")
-    p = subprocess.Popen(['casperjs', 'scripts/soundcloud_login.js'],
+    p = subprocess.Popen(['casperjs', '../scripts/soundcloud_login.js'],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE)
     global info, out
@@ -89,14 +88,14 @@ def testbot():
     info = json.loads(out.decode('utf-8'))
     for index in info:
         #Remove HTML tags from soundcloud text
-		info[index]['text'] = strip_tags(info[index]['text']).replace('\n', '')
+        info[index]['text'] = info[index]['text'].replace('\n', '')
         #Changes str int indexes to int indexes
-		info[int(index)] = info.pop(index) 
+        info[int(index)] = info.pop(index) 
 
-	print("Out: ")
-	print(out)
-	print("Info: ")
-	print(info)
+    print("Out: ")
+    print(out)
+    print("Info: ")
+    print(info)
 
 
 
