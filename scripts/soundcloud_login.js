@@ -174,25 +174,25 @@ casper.waitForSelector('.ownActivity', function() {
             var comment = data[i];
             var commentId = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23)
             console.log("commentId: " + commentId);
-            var tipper = comment.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
-            console.log("tipper: " + tipper);
-            var tippee = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23, comment.children[1].children[1].children[0].children[1].children[0].href.substr(23).indexOf('/'));
-            console.log("tippee: " + tippee)
-            var text = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
-            console.log("text: " + text);
+            var sender = comment.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
+            console.log("sender: " + sender);
+            var receiver = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23, comment.children[1].children[1].children[0].children[1].children[0].href.substr(23).indexOf('/'));
+            console.log("receiver: " + receiver)
+            var message = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
+            console.log("message: " + message);
 
             if(outputAsString){ //Output as strings
                 result += i + ": {";
                 result += "'comment_id': " + "'" + commentId + "', ";
-                result += "'tipper': " + "'" + tipper + "', ";
-                result += "'tippee': " + "'" + tipper + "', ";
-                result += "'text': " + "\"" + text + "\"}, ";
+                result += "'sender': " + "'" + sender + "', ";
+                result += "'receiver': " + "'" + sender + "', ";
+                result += "'message': " + "\"" + message + "\"}, ";
             }else{ //Add info to result to output as JSON object
                 result[i] = {};
                 result[i]['id'] = commentId;
-                result[i]['tipper'] = tipper;
-                result[i]['tippee'] = tippee;
-                result[i]['text'] = text;
+                result[i]['sender'] = sender;
+                result[i]['receiver'] = receiver;
+                result[i]['message'] = message;
             }
             
         }
@@ -225,13 +225,13 @@ casper.run();
 //document.querySelector('.ownActivity.comment .userAvatarBadge__avatarLink').href
 //"http://soundcloud.com/maxtipper"
 
-//Get tipper username
+//Get sender username
 //document.querySelector('.ownActivity.comment .userBadge__usernameLink').innerHTML
 //document.querySelector('.ownActivity.comment').children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
 //"maxtipper"
 
 //Get link to comment including comment id + example output
-//Get tippee username
+//Get receiver username
 //Can maybe use this as unique identifier
 // document.querySelector('.ownActivity.comment .sc-link-light').href
 // document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[1].children[0].href
@@ -239,7 +239,7 @@ casper.run();
 //User <link>.substr(23) to get "maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
 //Use <link>.substr(23, <link>.substr(23).indexOf('/')) to get "maxtippee"
 
-//Get text + example output
+//Get message + example output
 // document.querySelector('.ownActivity.comment .commentTitle__quotedBody').innerHTML
 //document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[0].children[1].innerHTML
 // "
