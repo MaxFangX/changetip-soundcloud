@@ -19,20 +19,15 @@ print("Submitting tips")
 #Loop through dictionary of tips and submit each
 for index in tips:
 	tip = tips[index]
-	tip_data = {
-		"sender": tip['sender']
-		"receiver": tip['receiver']
-		"message": tip['message']
-		"context_uid": tip['id']
-		"meta": {} #TODO add time stamp + other relevant information		
-	}
-	print(str(tip_data)) #test
+	print(str(tip)) #test
 
-	response = bot.send_tip(**tip_data)
+	response = bot.send_tip(**tip)
 	out = ""
 	if response.get("error_code") == "invalid_sender":
-		out = "Handling invalid_sender"
-		bot.invite_new_user(tip_data["sender"])
+		out = "Handling invalid sender %s" % tip['sender']
+		bot.invite_new_user(tip['sender'])
+
+
 
 	print(out)
 
