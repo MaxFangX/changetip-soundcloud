@@ -172,8 +172,8 @@ casper.waitForSelector('.ownActivity', function() {
             //Get info
             //TODO Clean up this disaster
             var comment = data[i];
-            var commentId = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23)
-            console.log("commentId: " + commentId);
+            var context_uid = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23)
+            console.log("context_uid: " + context_uid);
             var sender = comment.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
             console.log("sender: " + sender);
             var receiver = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23, comment.children[1].children[1].children[0].children[1].children[0].href.substr(23).indexOf('/'));
@@ -183,16 +183,17 @@ casper.waitForSelector('.ownActivity', function() {
 
             if(outputAsString){ //Output as strings
                 result += i + ": {";
-                result += "'comment_id': " + "'" + commentId + "', ";
+                result += "'context_id': " + "'" + context_uid + "', ";
                 result += "'sender': " + "'" + sender + "', ";
                 result += "'receiver': " + "'" + sender + "', ";
                 result += "'message': " + "\"" + message + "\"}, ";
             }else{ //Add info to result to output as JSON object
                 result[i] = {};
-                result[i]['id'] = commentId;
+                result[i]['context_uid'] = context_uid;
                 result[i]['sender'] = sender;
                 result[i]['receiver'] = receiver;
                 result[i]['message'] = message;
+                result[i]['meta'] = {} //TODO add time stamp
             }
             
         }
