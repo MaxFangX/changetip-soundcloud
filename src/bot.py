@@ -9,7 +9,7 @@ from changetip.bots.base import BaseBot
 class SoundCloudBot(BaseBot):
     changetip_api_key = os.getenv("CHANGETIP_API_KEY", "fake_key")
     assert changetip_api_key != "fake_key", "Need to set CHANGETIP_API_KEY environment variable"
-
+    channel = "soundcloud"
     username = "maxtipbot"  # username on the site
     prefix = "@"
     last_context_uid = None
