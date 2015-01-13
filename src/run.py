@@ -21,11 +21,15 @@ for index in tips:
 	tip = tips[index]
 	print(str(tip)) #test
 
+	#TODO use SoundCloudBot.dupe_check here
 	response = bot.send_tip(**tip)
 	out = ""
 	if response.get("error_code") == "invalid_sender":
 		out = "Handling invalid sender %s" % tip['sender']
 		bot.invite_new_user(tip['sender'])
+	elif reponse.get("error_code") == "duplicate_context_uid":
+		out = "Handling duplicate tip %s" % tip['context_uid']
+		pass 
 
 
 
