@@ -76,16 +76,7 @@ class SoundCloudBot(BaseBot):
     # def get_sibling_tips(self, parent_id):
 
 
-#TESTING AREA BELOW
 
-data = {}
-
-def test():
-    print("Running test()")
-    s = SoundCloudBot()
-    global data
-    data = s.check_for_new_tips(None)
-    print("Data: " + str(data))
 
 
 
