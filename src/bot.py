@@ -27,7 +27,7 @@ class SoundCloudBot(BaseBot):
 
     def check_for_new_tips(self, last):
         """ Poll the site for new tips. Expected to return an array of tips, in the format passed to send_tip """
-        print("running testbot()")
+        print("Running check_for_new_tips(self, last)")
         p = subprocess.Popen(['casperjs', 
                             '../scripts/soundcloud_login.js'],
                             stdout=subprocess.PIPE,
@@ -78,29 +78,14 @@ class SoundCloudBot(BaseBot):
 
 #TESTING AREA BELOW
 
-info = {}
-out = ''
+data = {}
 
-def testbot():
-    print("running testbot()")
-    p = subprocess.Popen(['casperjs', '../scripts/soundcloud_login.js'],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE)
-    global info, out
-    out, err = p.communicate()
-    info = json.loads(out.decode('utf-8'))
-    for index in info:
-        #Remove HTML tags from soundcloud text
-        info[index]['message'] = re.sub('<[^<]+?>', 
-                                    '', 
-                                    info[index]['message'].replace('\n', ''))
-        #Changes str int indexes to int indexes
-        info[int(index)] = info.pop(index) 
-
-    print("Out: ")
-    print(out)
-    print("Info: ")
-    print(info)
+def test():
+    print("Running test()")
+    s = SoundCloudBot()
+    global data
+    data = s.check_for_new_tips(None)
+    print("Data: " + str(data))
 
 
 
