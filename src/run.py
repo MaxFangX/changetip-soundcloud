@@ -30,10 +30,10 @@ for index in tips:
 	if response.get("error_code") == "invalid_sender":
 		out = "Handling invalid sender %s" % tip['sender']
 		bot.invite_new_user(tip['sender']) #TODO implement
-	elif reponse.get("error_code") == "duplicate_context_uid":
+	elif response.get("error_code") == "duplicate_context_uid":
 		out = "Handling duplicate tip %s" % tip['context_uid']
 		pass
-	elif response.get("state") in ["ok", "accepted"] #TODO 
+	elif response.get("state") in ["ok", "accepted"]: #TODO 
 		_tip = response['tip']
 		print("Response Tip: " + str(response['tip'])) #test
 		if _tip['status'] == "out for delivery":
