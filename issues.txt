@@ -1,3 +1,5 @@
+===ISSUE 1===
+
 Linkage between SoundCloud and ChangeCoin technicalities
 
 Connecting to Changetip: 
