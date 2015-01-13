@@ -35,9 +35,9 @@ class SoundCloudBot(BaseBot):
         out, err = p.communicate()
         info = json.loads(out.decode('utf-8'))
         for index in info:
-            info[index]['text'] = re.sub('<[^<]+?>', 
+            info[index]['message'] = re.sub('<[^<]+?>', 
                                         '', 
-                                        info[index]['text'].replace('\n', ''))
+                                        info[index]['message'].replace('\n', ''))
             info[int(index)] = info.pop(index)
         return info
     
@@ -91,9 +91,9 @@ def testbot():
     info = json.loads(out.decode('utf-8'))
     for index in info:
         #Remove HTML tags from soundcloud text
-        info[index]['text'] = re.sub('<[^<]+?>', 
+        info[index]['message'] = re.sub('<[^<]+?>', 
                                     '', 
-                                    info[index]['text'].replace('\n', ''))
+                                    info[index]['message'].replace('\n', ''))
         #Changes str int indexes to int indexes
         info[int(index)] = info.pop(index) 
 
