@@ -42,7 +42,7 @@ casper.start('http://soundcloud.com', function(){
     printIfEnabled("**Got to SoundCloud homepage.");
     printIfEnabled("Title: "+ this.getTitle());
     printIfEnabled("Next - clicking login button");
-    this.capture('isitloggedin.png');
+    this.capture('_isitloggedin.png');
     printIfEnabled("Is .g-tabs-item detected: " + 
         casper.exists('.g-tabs-item'));
     printIfEnabled("Is .userNav__username detected: " +

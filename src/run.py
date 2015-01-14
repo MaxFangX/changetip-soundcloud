@@ -22,7 +22,7 @@ print("Submitting tips")
 #Loop through dictionary of tips and submit each
 for index in tips:
 	tip = tips[index]
-	print("Testing tip from %s to %s with message'%s'" % (tip['sender'], 
+	print("===Testing tip from %s to %s with message'%s'" % (tip['sender'], 
 														tip['receiver'],
 														tip['message']))
 
@@ -47,6 +47,9 @@ for index in tips:
 									_tip['receiver'])
 	else:
 		out = "Did not hit any cases. Tip status unknown."
+		# Gets to this if sender == receiver
+		# Also gets to this if the output is not recognized.
+		#TODO Handle the above cases
 	print("Tip processed. Output: ") #test
 	print(out) #TODO make this a return value for Celery
 
