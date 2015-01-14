@@ -99,12 +99,12 @@ casper.withPopup(/connect\?/, function() {
     if(this.exists('#authorize')){
         printIfEnabled("Login button exists");
     };
-    //this.capture('000beforesubmit.png')
+    this.capture('0beforesubmit.png')
     this.click('#authorize');
 });
 
 casper.wait(3000, function() {
-    //this.capture('111mainpage.png');
+    this.capture('1mainpage.png');
     printIfEnabled("POPUPS.LENGTH: "+ casper.popups.length);
 })
 casper.wait(3000, function(){});
@@ -116,7 +116,7 @@ casper.then(function(){
 
 casper.waitForPopup(/connect\?/, function() {
     casper.withPopup(/connect\?/, function() {
-        //this.capture('222popup.png');
+        this.capture('2popup.png');
         printIfEnabled(this.evaluate(function() {
             return document.title;
         }))
@@ -136,14 +136,14 @@ casper.waitForPopup(/connect\?/, function() {
     casper.then(function() {
         printIfEnabled("****Logged in successfully!");
         printIfEnabled("Popups length: " + this.popups.length)
-        this.capture('333loggedin.png')
+        this.capture('3loggedin.png')
         printIfEnabled("Logged in title: " + this.evaluate(function() {
             return document.title;
         }));
     });
 
     casper.thenOpen("http://soundcloud.com/notifications").waitForSelector('.ownActivity', function() {
-                this.capture('444final.png')
+                this.capture('4final.png')
                 printIfEnabled("Notification title: " + this.getTitle());
             }
     );
@@ -158,8 +158,8 @@ casper.reload(function() {
 casper.waitForSelector('.ownActivity', function() {
     printIfEnabled("Notifications page loaded, start SCRAPING");
     //Screenshot with unique timestamp for every time the page refreshes
-    this.capture(Math.round(new Date().getTime()/100)%100000+".png");
-
+    //this.capture(Math.round(new Date().getTime()/100)%100000+".png");
+    this.capture('5startscraping.png');
     //Scrape info
     var output = this.evaluate(function(outputAsString) {
         var data = document.querySelectorAll('.ownActivity.comment');
