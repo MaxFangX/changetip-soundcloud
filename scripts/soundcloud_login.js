@@ -183,6 +183,8 @@ casper.waitForSelector('.ownActivity', function() {
             console.log("receiver: " + receiver);
             var message = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
             console.log("message: " + message);
+            var timestamp = comment.children[2].getAttribute("datetime");
+            console.log("timestamp: " + timestamp)
 
             if(outputAsString){ //Outputting as string deprecated
                 result += i + ": {";
@@ -198,7 +200,8 @@ casper.waitForSelector('.ownActivity', function() {
                 result[i]['message'] = message;
                 result[i]['meta'] = {
                     'context_url': context_url,    
-                } //TODO add time stamp
+                    'timestamp': timestamp
+                }
             }
             
         }
