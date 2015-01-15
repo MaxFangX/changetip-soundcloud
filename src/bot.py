@@ -76,6 +76,11 @@ class SoundCloudBot(BaseBot):
 
     # def get_sibling_tips(self, parent_id):
 
+    def on_self_send(self, tx, tiplike_text, process=True):
+        """ Unique method specifying how to interact with the user when they try to send a tip to themselves
+        """
+        pass #TODO
+
 
 
 

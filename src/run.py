@@ -46,10 +46,13 @@ for index in tips:
 			out = "The tip has been delivered, %s has been added to %s's ChangeTip wallet." % (_tip['amount_display'],
 									_tip['receiver'])
 	else:
-		out = "Did not hit any cases. Tip status unknown."
 		# Gets to this if sender == receiver
 		# Also gets to this if the output is not recognized.
 		#TODO Handle the above cases
+		if tip['sender'] == tip['receiver']:
+			bot.on_self_send(tip['context_uid'], tip['message'])
+		else:
+			out = "Did not hit any cases. Tip status unknown."
 	print("Tip processed. Output: ") #test
 	print(out) #TODO make this a return value for Celery
 
