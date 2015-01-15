@@ -174,18 +174,21 @@ casper.waitForSelector('.ownActivity', function() {
             //TODO Clean up this disaster
             var comment = data[i];
             var context_url = comment.children[1].children[1].children[0].children[1].children[0].href;
-            console.log("context_url: " + context_url);
             var context_uid = context_url.substr(context_url.lastIndexOf("/")+9);
-            console.log("context_uid: " + context_uid);
             var sender = comment.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text;
-            console.log("sender: " + sender);
-            var receiver = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23, comment.children[1].children[1].children[0].children[1].children[0].href.substr(23).indexOf('/'));
-            console.log("receiver: " + receiver);
+            var receiver = context_url.substr(23, context_url.substr(23).indexOf('/'));
             var message = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
-            console.log("message: " + message);
             var timestamp = comment.children[2].getAttribute("datetime");
-            console.log("timestamp: " + timestamp)
+            var track_id = context_url.substring(0, context_url.lastIndexOf('/')).substring(context_url.substring(0, context_url.lastIndexOf('/')).lastIndexOf('/')+1);
 
+            console.log("context_uid: " + context_uid);
+            console.log("context_url: " + context_url);
+            console.log("message: " + message);
+            console.log("receiver: " + receiver);
+            console.log("sender: " + sender);
+            console.log("timestamp: " + timestamp);
+            console.log("track_id: " + track_id);
+            
             if(outputAsString){ //Outputting as string deprecated
                 result += i + ": {";
                 result += "'context_uid': " + "'" + context_uid + "', ";
@@ -199,8 +202,9 @@ casper.waitForSelector('.ownActivity', function() {
                 result[i]['receiver'] = receiver;
                 result[i]['message'] = message;
                 result[i]['meta'] = {
-                    'context_url': context_url,    
-                    'timestamp': timestamp
+                    'context_url': context_url,
+                    'track_id': track_id,    
+                    'timestamp': timestamp,
                 }
             }
             
@@ -222,36 +226,53 @@ casper.wait(30000); //Wait 30 seconds before next refresh
 
 casper.run();
 
-//Get all notifications
-//('.ownActivity')
-//An array
+//GET all notifications
+//  ('.ownActivity')
+//returns an array
 
-//Get all mention notifications
-//document.querySelectorAll('.ownActivity.comment')
-//An array
+//GET all mention notifications
+//  document.querySelectorAll('.ownActivity.comment')
+//returns an array
 
-//Get link to commenter profile
-//document.querySelector('.ownActivity.comment .userAvatarBadge__avatarLink').href
-//"http://soundcloud.com/maxtipper"
+//GET link to commenter profile
+//  document.querySelector('.ownActivity.comment .userAvatarBadge__avatarLink').href
+//returns "http://soundcloud.com/maxtipper"
 
-//Get sender username
-//document.querySelector('.ownActivity.comment .userBadge__usernameLink').innerHTML
-//document.querySelector('.ownActivity.comment').children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
-//"maxtipper"
+//GET sender username
+//  document.querySelector('.ownActivity.comment .userBadge__usernameLink').innerHTML
+//or
+//  document.querySelector('.ownActivity.comment').children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
+//returns "maxtipper"
 
-//Get link to comment including comment id + example output
-//Get receiver username
-//Can maybe use this as unique identifier
-// document.querySelector('.ownActivity.comment .sc-link-light').href
-// document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[1].children[0].href
-// "https://soundcloud.com/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
-//Use <link>.substr(23) to get "maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189" (context_url)
-//Use context_url.substr(context_url.lastIndexOf("/")+9) to get "215516189" (context_uid)
-//Use <link>.substr(23, <link>.substr(23).indexOf('/')) to get "maxtippee"
+//GET link to comment including comment id
+//  document.querySelector('.ownActivity.comment .sc-link-light').href
+//or 
+//  document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[1].children[0].href
+//returns:
+//  "https://soundcloud.com/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
+
+//GET link without 'http://soundcloud.com/'
+//  context_url.substr(23)
+//returns:
+//  "maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
+
+//GET context_uid
+//  context_url.substr(context_url.lastIndexOf("/")+9)
+//returns "215516189"
+
+//GET receiver
+//  context_url.substr(23, context_url.substr(23).indexOf('/'))
+//returns "maxtippee"
+
+//GET track_id
+//  context_url.substring(0, context_url.lastIndexOf('/')).substring(context_url.substring(0, context_url.lastIndexOf('/')).lastIndexOf('/')+1)
+//returns 'pure-imagination-for-marimba-evan-jose'
 
 //Get message + example output
-// document.querySelector('.ownActivity.comment .commentTitle__quotedBody').innerHTML
-//document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[0].children[1].innerHTML
+//  document.querySelector('.ownActivity.comment .commentTitle__quotedBody').innerHTML
+//or
+//  document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[0].children[1].innerHTML
+//returns: 
 // "
       
 //         @<a href="/maxtippee">maxtippee</a>: 103 bits
