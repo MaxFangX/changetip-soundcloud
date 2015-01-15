@@ -179,7 +179,7 @@ casper.waitForSelector('.ownActivity', function() {
             var receiver = context_url.substr(23, context_url.substr(23).indexOf('/'));
             var message = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
             var timestamp = comment.children[2].getAttribute("datetime");
-            var track_id = context_url.substring(0, context_url.lastIndexOf('/')).substring(context_url.substring(0, context_url.lastIndexOf('/')).lastIndexOf('/')+1);
+            var track_url = context_url.substring(0, context_url.lastIndexOf('/')).substring(context_url.substring(0, context_url.lastIndexOf('/')).lastIndexOf('/')+1);
 
             console.log("context_uid: " + context_uid);
             console.log("context_url: " + context_url);
@@ -187,7 +187,7 @@ casper.waitForSelector('.ownActivity', function() {
             console.log("receiver: " + receiver);
             console.log("sender: " + sender);
             console.log("timestamp: " + timestamp);
-            console.log("track_id: " + track_id);
+            console.log("track_url: " + track_url);
             
             if(outputAsString){ //Outputting as string deprecated
                 result += i + ": {";
@@ -203,7 +203,7 @@ casper.waitForSelector('.ownActivity', function() {
                 result[i]['message'] = message;
                 result[i]['meta'] = {
                     'context_url': context_url,
-                    'track_id': track_id,    
+                    'track_url': track_url,    
                     'timestamp': timestamp,
                 }
             }
@@ -264,7 +264,7 @@ casper.run();
 //  context_url.substr(23, context_url.substr(23).indexOf('/'))
 //returns "maxtippee"
 
-//GET track_id
+//GET track_url
 //  context_url.substring(0, context_url.lastIndexOf('/')).substring(context_url.substring(0, context_url.lastIndexOf('/')).lastIndexOf('/')+1)
 //returns 'pure-imagination-for-marimba-evan-jose'
 
