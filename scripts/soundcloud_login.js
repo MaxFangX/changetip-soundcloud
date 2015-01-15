@@ -10,6 +10,7 @@ if(pass == undefined){
 
 //True to output as Python readable string.
 //False to output as JSON Object
+//Outputting as string deprecated 1/14/15
 var outputAsString = false;
 
 var printEnabled = false;
@@ -172,18 +173,20 @@ casper.waitForSelector('.ownActivity', function() {
             //Get info
             //TODO Clean up this disaster
             var comment = data[i];
-            var context_uid = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23)
+            var context_url = comment.children[1].children[1].children[0].children[1].children[0].href;
+            console.log("context_url: " + context_url);
+            var context_uid = context_url.substr(context_url.lastIndexOf("/")+9);
             console.log("context_uid: " + context_uid);
-            var sender = comment.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
+            var sender = comment.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text;
             console.log("sender: " + sender);
             var receiver = comment.children[1].children[1].children[0].children[1].children[0].href.substr(23, comment.children[1].children[1].children[0].children[1].children[0].href.substr(23).indexOf('/'));
-            console.log("receiver: " + receiver)
+            console.log("receiver: " + receiver);
             var message = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
             console.log("message: " + message);
 
-            if(outputAsString){ //Output as strings
+            if(outputAsString){ //Outputting as string deprecated
                 result += i + ": {";
-                result += "'context_id': " + "'" + context_uid + "', ";
+                result += "'context_uid': " + "'" + context_uid + "', ";
                 result += "'sender': " + "'" + sender + "', ";
                 result += "'receiver': " + "'" + sender + "', ";
                 result += "'message': " + "\"" + message + "\"}, ";
@@ -193,7 +196,9 @@ casper.waitForSelector('.ownActivity', function() {
                 result[i]['sender'] = sender;
                 result[i]['receiver'] = receiver;
                 result[i]['message'] = message;
-                result[i]['meta'] = {} //TODO add time stamp
+                result[i]['meta'] = {
+                    'context_url': context_url,    
+                } //TODO add time stamp
             }
             
         }
@@ -237,7 +242,8 @@ casper.run();
 // document.querySelector('.ownActivity.comment .sc-link-light').href
 // document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[1].children[0].href
 // "https://soundcloud.com/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
-//User <link>.substr(23) to get "maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
+//Use <link>.substr(23) to get "maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189" (context_url)
+//Use context_url.substr(context_url.lastIndexOf("/")+9) to get "215516189" (context_uid)
 //Use <link>.substr(23, <link>.substr(23).indexOf('/')) to get "maxtippee"
 
 //Get message + example output
