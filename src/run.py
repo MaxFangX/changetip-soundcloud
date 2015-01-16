@@ -1,10 +1,5 @@
 import os
 from bot import SoundCloudBot
-# CHECK FOR ENVIRONMENT VARIABLES
-SOUNDCLOUD_CLIENT_ID = os.getenv("SOUNDCLOUD_CLIENT_ID", "fake_client_id")
-assert SOUNDCLOUD_CLIENT_ID != "fake_client_id", "Need to set SOUNDCLOUD_CLIENT_ID environment variable"
-SOUNDCLOUD_CLIENT_SECRET = os.getenv("SOUNDCLOUD_CLIENT_SECRET", "fake_client_secret")
-assert SOUNDCLOUD_CLIENT_SECRET != "fake_client_secret", "Need to set SOUNDCLOUD_CLIENT_SECRET environment variable"
 
 #Reference values
 info_url = "https://www.changetip.com/tip-online/soundcloud" 

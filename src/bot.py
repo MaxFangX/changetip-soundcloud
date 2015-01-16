@@ -7,8 +7,15 @@ from changetip.bots.base import BaseBot
 
 
 class SoundCloudBot(BaseBot):
+    # CHECK FOR ENVIRONMENT VARIABLES
     changetip_api_key = os.getenv("CHANGETIP_API_KEY", "fake_key")
+    
+    SOUNDCLOUD_CLIENT_ID = os.getenv("SOUNDCLOUD_CLIENT_ID", "fake_client_id")
+    SOUNDCLOUD_CLIENT_SECRET = os.getenv("SOUNDCLOUD_CLIENT_SECRET", "fake_client_secret")
     assert changetip_api_key != "fake_key", "Need to set CHANGETIP_API_KEY environment variable"
+    assert SOUNDCLOUD_CLIENT_ID != "fake_client_id", "Need to set SOUNDCLOUD_CLIENT_ID environment variable"
+    assert SOUNDCLOUD_CLIENT_SECRET != "fake_client_secret", "Need to set SOUNDCLOUD_CLIENT_SECRET environment variable"
+
     channel = "soundcloud"
     username = "maxtipbot"  # username on the site
     prefix = "@"
