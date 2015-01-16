@@ -38,7 +38,6 @@ class SoundCloudBot(BaseBot):
     # How many seconds the bot runner should wait before checking for new tips
     new_tip_check_delay = 30
 
-
     def dupecheck(self, context_uid):
         """ Check locally for duplicates before submitting
         Should raise a DuplicateTipException if duplicate is found
@@ -54,22 +53,27 @@ class SoundCloudBot(BaseBot):
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
         out, err = p.communicate()
-        info = json.loads(out.decode('utf-8'))
-        for index in info:
-            comment = client.get('/comments/' + info[index]['context_uid'])
-            info[index].update({
+        tips = json.loads(out.decode('utf-8'))
+        print("Scraped tips")
+        for index in tips:
+            print("Processing tip")
+            comment = self.client.get('/comments/' + tips[index]['context_uid'])
+            comment.raw_data = json.loads(comment.raw_data)
+            tips[index].update({
                 'sender': comment.raw_data['user']['permalink'],
                 'message': comment.raw_data['body'],
             })
-            info[index]['meta'].update({
+            print("Updating meta")
+            tips[index]['meta'].update({
                 'timestamp': comment.raw_data['created_at'],
                 #The millisecond index at which the comment was placed
                 'track_index': comment.raw_data['timestamp'],
             })
             #Convert str indexes to ints
-            info[int(index)] = info.pop(index) 
+            print("Converting str indexes to ints")
+            tips[int(index)] = tips.pop(index) 
         print("Finishing check_for_new_tips")
-        return info
+        return tips
     
     # def send_tip(self, sender, receiver, message, context_uid, meta):
 
