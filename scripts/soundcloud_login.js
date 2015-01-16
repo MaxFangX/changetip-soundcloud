@@ -176,13 +176,11 @@ casper.waitForSelector('.ownActivity', function() {
             var context_url = comment.children[1].children[1].children[0].children[1].children[0].href;
             var context_uid = context_url.substr(context_url.lastIndexOf("/")+9);
             var receiver = context_url.substr(23, context_url.substr(23).indexOf('/'));
-            var message = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
             var timestamp = comment.children[2].getAttribute("datetime");
             var track_url = context_url.substring(0, context_url.lastIndexOf('/')).substring(context_url.substring(0, context_url.lastIndexOf('/')).lastIndexOf('/')+1);
 
             console.log("context_uid: " + context_uid);
             console.log("context_url: " + context_url);
-            console.log("message: " + message);
             console.log("receiver: " + receiver);
             console.log("sender: " + sender);
             console.log("timestamp: " + timestamp);
@@ -193,13 +191,11 @@ casper.waitForSelector('.ownActivity', function() {
                 result += "'context_uid': " + "'" + context_uid + "', ";
                 result += "'sender': " + "'" + sender + "', ";
                 result += "'receiver': " + "'" + sender + "', ";
-                result += "'message': " + "\"" + message + "\"}, ";
             }else{ //Add info to result to output as JSON object
                 result[i] = {};
                 result[i]['context_uid'] = context_uid;
                 result[i]['sender'] = sender;
                 result[i]['receiver'] = receiver;
-                result[i]['message'] = message;
                 result[i]['meta'] = {
                     'context_url': context_url,
                     'track_url': track_url,    

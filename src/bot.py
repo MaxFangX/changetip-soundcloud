@@ -59,6 +59,7 @@ class SoundCloudBot(BaseBot):
             comment = client.get('/comments/' + info[index]['context_uid'])
             info[index].update({
                 'sender': comment.raw_data['user']['permalink']
+                'message': comment.raw_data['body']
             })
             info[int(index)] = info.pop(index) #Convert str indexes to ints
         print("Finishing check_for_new_tips")
