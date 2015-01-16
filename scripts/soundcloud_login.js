@@ -175,7 +175,6 @@ casper.waitForSelector('.ownActivity', function() {
             var comment = data[i];
             var context_url = comment.children[1].children[1].children[0].children[1].children[0].href;
             var context_uid = context_url.substr(context_url.lastIndexOf("/")+9);
-            var sender = comment.children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text;
             var receiver = context_url.substr(23, context_url.substr(23).indexOf('/'));
             var message = comment.children[1].children[1].children[0].children[0].children[1].innerHTML;
             var timestamp = comment.children[2].getAttribute("datetime");
