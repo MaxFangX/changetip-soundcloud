@@ -26,8 +26,7 @@ for index in tips:
 			out = "Handling invalid sender %s" % tip['sender']
 			bot.invite_new_user(tip['sender']) #TODO implement
 		elif response.get("error_code") == "duplicate_context_uid":
-			out = "Handling duplicate tip %s" % tip['context_uid']
-			pass
+			out = "Duplicate tip %s handled by ChangeTip API" % tip['context_uid']
 		elif response.get("state") in ["ok", "accepted"]: #TODO 
 			response_tip = response['tip']
 			#print("Response Tip: " + str(response['tip'])) #test
@@ -44,10 +43,11 @@ for index in tips:
 			#TODO Handle the above cases
 			if tip['sender'] == tip['receiver']:
 				bot.on_self_send(tip['context_uid'], tip['message'])
+				out = "You cannot tip yourself!"
 			else:
-				out = "Did not hit any cases. Tip status unknown."
+				out = "Tip format unrecognized"
 	except(DuplicateTipException):
-		out = "Duplicate tip; Not submitted to ChangeTip API"
+		out = "Duplicate tip handled locally"
 	print("Tip processed. Output: ") #test
 	print(out) #TODO make this a return value for Celery
 	print("Replying via comment")
