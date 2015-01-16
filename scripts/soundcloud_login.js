@@ -163,36 +163,31 @@ casper.waitForSelector('.ownActivity', function() {
     this.capture('5startscraping.png');
     //Scrape info
     var output = this.evaluate(function(outputAsString) {
-        var data = document.querySelectorAll('.ownActivity.comment');
-
+        //Scrape links to comments
+        var links = document.querySelectorAll('.ownActivity.comment .sc-link-light');
         var result = {}
         if(outputAsString){
             result = '{'
         }
-        for(var i = 0; i < data.length; i++){
-            //Get info
-            //TODO Clean up this disaster
-            var comment = data[i];
-            var context_url = comment.children[1].children[1].children[0].children[1].children[0].href;
+        for(var i = 0; i < links.length; i++){
+            var context_url = links[i].href;
             var context_uid = context_url.substr(context_url.lastIndexOf("/")+9);
+            // TODO determine if comment is parent using .parentNode
             var receiver = context_url.substr(23, context_url.substr(23).indexOf('/'));
             var track_url = context_url.substring(0, context_url.lastIndexOf('/')).substring(context_url.substring(0, context_url.lastIndexOf('/')).lastIndexOf('/')+1);
 
             console.log("context_uid: " + context_uid);
             console.log("context_url: " + context_url);
             console.log("receiver: " + receiver);
-            console.log("sender: " + sender);
             console.log("track_url: " + track_url);
             
             if(outputAsString){ //Outputting as string deprecated
                 result += i + ": {";
                 result += "'context_uid': " + "'" + context_uid + "', ";
-                result += "'sender': " + "'" + sender + "', ";
                 result += "'receiver': " + "'" + sender + "', ";
             }else{ //Add info to result to output as JSON object
                 result[i] = {};
                 result[i]['context_uid'] = context_uid;
-                result[i]['sender'] = sender;
                 result[i]['receiver'] = receiver;
                 result[i]['meta'] = {
                     'context_url': context_url,
