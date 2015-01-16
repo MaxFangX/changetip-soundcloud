@@ -63,6 +63,8 @@ class SoundCloudBot(BaseBot):
             })
             info[index]['meta'].update({
                 'timestamp': comment.raw_data['created_at'],
+                #The millisecond index at which the comment was placed
+                'track_index': comment.raw_data['timestamp'],
             })
             #Convert str indexes to ints
             info[int(index)] = info.pop(index) 
