@@ -6,6 +6,8 @@ import soundcloud
 
 from changetip.bots.base import BaseBot
 
+class DuplicateTipException(Exception):
+    pass
 
 class SoundCloudBot(BaseBot):
     # CHECK FOR ENVIRONMENT VARIABLES
@@ -46,40 +48,35 @@ class SoundCloudBot(BaseBot):
 
     def check_for_new_tips(self, last):
         """ Poll the site for new tips. Expected to return an array of tips, in the format passed to send_tip """
-        print("Running check_for_new_tips(self, last)") #test
-        #TODO better, less breakable data parsing
+        print("====Running check_for_new_tips(self, last)") #test
         p = subprocess.Popen(['casperjs', 
                             '../scripts/soundcloud_login.js'],
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
         out, err = p.communicate()
         tips = json.loads(out.decode('utf-8'))
-        print("Scraped tips")
         for index in tips:
-            print("Processing tip")
             comment = self.client.get('/comments/' + tips[index]['context_uid'])
             comment.raw_data = json.loads(comment.raw_data)
             tips[index].update({
                 'sender': comment.raw_data['user']['permalink'],
                 'message': comment.raw_data['body'],
             })
-            print("Updating meta")
             tips[index]['meta'].update({
                 'timestamp': comment.raw_data['created_at'],
                 #The millisecond index at which the comment was placed
                 'track_index': comment.raw_data['timestamp'],
             })
             #Convert str indexes to ints
-            print("Converting str indexes to ints")
             tips[int(index)] = tips.pop(index) 
-        print("Finishing check_for_new_tips")
+        print("Finished check_for_new_tips")
         return tips
     
     # def send_tip(self, sender, receiver, message, context_uid, meta):
 
     def deliver_tip_response(self, tx):
         """ Does the work to post the response to the thread on the site. Returns True or Exception """
-        raise NotImplementedError
+        pass #TODO implement
 
     #def deliver_tip_confirmation(self, tx):
 
