@@ -2,6 +2,7 @@ import json
 import subprocess
 import os
 import re
+import soundcloud
 
 from changetip.bots.base import BaseBot
 
@@ -9,7 +10,6 @@ from changetip.bots.base import BaseBot
 class SoundCloudBot(BaseBot):
     # CHECK FOR ENVIRONMENT VARIABLES
     changetip_api_key = os.getenv("CHANGETIP_API_KEY", "fake_key")
-    
     SOUNDCLOUD_CLIENT_ID = os.getenv("SOUNDCLOUD_CLIENT_ID", "fake_client_id")
     SOUNDCLOUD_CLIENT_SECRET = os.getenv("SOUNDCLOUD_CLIENT_SECRET", "fake_client_secret")
     CHANGETIP_BOT_USER = os.getenv("CHANGETIP_BOT_USER", "fake_bot_user")
@@ -19,6 +19,15 @@ class SoundCloudBot(BaseBot):
     assert SOUNDCLOUD_CLIENT_SECRET != "fake_client_secret", "Need to set SOUNDCLOUD_CLIENT_SECRET environment variable"
     assert CHANGETIP_BOT_USER != "fake_bot_user", "Need to set CHANGETIP_BOT_USER environment variable"
     assert CHANGETIP_BOT_PASS != "fake_bot_pass", "Need to set CHANGETIP_BOT_PASS environment variable"
+
+    #Initialize the single SoundCloud client
+    client = soundcloud.Client(
+        client_id=SOUNDCLOUD_CLIENT_ID,
+        client_secret=SOUNDCLOUD_CLIENT_SECRET,
+        username=CHANGETIP_BOT_USER,
+        password=CHANGETIP_BOT_PASS,
+    )
+    print("SoundCloud API client initialized")
 
     channel = "soundcloud"
     username = "maxtipbot"  # username on the site
