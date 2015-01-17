@@ -57,6 +57,8 @@ class SoundCloudBot(BaseBot):
                             stderr=subprocess.PIPE)
         out, err = p.communicate()
         tips = json.loads(out.decode('utf-8'))
+        print("Successfully scraped tips")
+        print("Making SoundCloud API calls")
         for index in tips:
             comment = self.client.get('/comments/' + tips[index]['context_uid'])
             comment.raw_data = json.loads(comment.raw_data)
@@ -72,6 +74,7 @@ class SoundCloudBot(BaseBot):
             })
             #Convert str indexes to ints
             tips[int(index)] = tips.pop(index) 
+        print("Finished tip data gathering")
         print("Finished check_for_new_tips()")
         return tips
     
@@ -85,7 +88,7 @@ class SoundCloudBot(BaseBot):
                     'body': comment_text,
                     'timestamp': tx['meta']['track_index']
                 })
-        return True
+            return True
         except(Exception):
             raise CommentFailedException
 

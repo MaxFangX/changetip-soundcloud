@@ -20,12 +20,18 @@ for index in tips:
 
 	out = ""
 	try:
+		#Will raise Exception if duplicate, and rest of suite won't run
 		bot.dupecheck(tip['context_uid'])
 		print("Submitting tip")
 		response = bot.send_tip(**tip)
 		if response.get("error_code") == "invalid_sender":
-			out = "Handling invalid sender %s" % tip['sender']
+			out = "Invalid sender %s" % tip['sender']
 			bot.invite_new_user(tip['sender']) #TODO implement
+			print("Replying via comment")
+			try:
+				bot.deliver_tip_response(tip, out)
+			except(CommentFailedException):
+				out += "\nComment reply failed"
 		elif response.get("error_code") == "duplicate_context_uid":
 			out = "Duplicate tip %s handled by ChangeTip API" % tip['context_uid']
 		elif response.get("state") in ["ok", "accepted"]: #TODO 
@@ -37,9 +43,19 @@ for index in tips:
 						response_tip['sender'], 
 						response_tip['receiver'], 
 						info_url)
+				print("Replying via comment")
+				try:
+					bot.deliver_tip_response(tip, out)
+				except(CommentFailedException):
+					out += "\nComment reply failed"
 			elif response_tip['status'] == "finished":
 				out = "The tip has been delivered, %s has been added to @%s's ChangeTip wallet." % (response_tip['amount_display'],
 										response_tip['receiver'])
+				print("Replying via comment")
+				try:
+					bot.deliver_tip_response(tip, out)
+				except(CommentFailedException):
+					out += "\nComment reply failed"
 		else:
 			# Gets to this if sender == receiver
 			# Also gets to this if the output is not recognized.
@@ -47,13 +63,18 @@ for index in tips:
 			if tip['sender'] == tip['receiver']:
 				bot.on_self_send(tip['context_uid'], tip['message'])
 				out = "You cannot tip yourself!"
+				print("Replying via comment")
+				try:
+					bot.deliver_tip_response(tip, out)
+				except(CommentFailedException):
+					out += "\n****Comment reply failed"
 			else:
 				out = "Tip format unrecognized"
-		print("Replying via comment")
-		try:
-			bot.deliver_tip_response(tip, out)
-		except(CommentFailedException):
-			out += "\nComment reply failed"
+				print("Replying via comment")
+				try:
+					bot.deliver_tip_response(tip, out)
+				except(CommentFailedException):
+					out += "\nComment reply failed"
 	except(DuplicateTipException):
 		out = "Duplicate tip handled locally"
 	print("Tip processed. Output: ") #test
