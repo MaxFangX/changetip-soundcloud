@@ -11,6 +11,9 @@ class CommentFailedException(Exception):
 class DuplicateTipException(Exception):
     pass
 
+class HTTPException(Exception):
+    pass
+
 class SoundCloudBot(BaseBot):
     # CHECK FOR ENVIRONMENT VARIABLES
     changetip_api_key = os.getenv("CHANGETIP_API_KEY", "fake_key")
@@ -46,7 +49,10 @@ class SoundCloudBot(BaseBot):
         """ Check locally for duplicates before submitting
         Should raise a DuplicateTipException if duplicate is found
         """
-        pass #TODO
+        if self.last_context_uid == None:
+            return # Is not duplicate if last_context_uid not initialized
+        elif int(context_uid) < self.last_context_uid:
+            raise DuplicateTipException
 
     def check_for_new_tips(self, last):
         """ Poll the site for new tips. Expected to return an array of tips, in the format passed to send_tip """
@@ -66,12 +72,12 @@ class SoundCloudBot(BaseBot):
                 context_url = tips[index]['meta']['context_url']
 
                 #String parsing for additional values
-                context_uid = context_url[context_url.rfind('/')+9:]
+                context_uid = int(context_url[context_url.rfind('/')+9:])
                 receiver = context_url[23:][:context_url[23:].index('/')]
                 track_url = context_url[:context_url.rfind('/')][context_url[:context_url.rfind('/')].rfind('/')+1:]
 
                 #API Call
-                comment = self.client.get('/comments/' + context_uid)
+                comment = self.client.get('/comments/%s' % context_uid)
                 comment.raw_data = json.loads(comment.raw_data)
 
                 #Fill in rest of information
@@ -91,7 +97,7 @@ class SoundCloudBot(BaseBot):
                 })
                 #Convert str indexes to ints
                 tips[int(index)] = tips.pop(index)
-            except(Exception):
+            except(HTTPException):
                 print("****Alert: HTTP request to SoundCloud API for tip %s failed. It may be a deleted tip" % context_uid)
                 remove_tips.append(index)
         for index in remove_tips:

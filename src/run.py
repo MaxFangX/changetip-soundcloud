@@ -18,12 +18,14 @@ for index in tips:
     tip = tips[index]
     print("==Processing tip from %s to %s with message'%s'" % (tip['sender'], tip['receiver'], tip['message']))
 
-    out = ""
+    out = "" #The output for the comment reply and the console
+
     try:
         #Will raise DuplicateTipException if duplicate, and rest of suite won't run
         bot.dupecheck(tip['context_uid'])
         print("Submitting tip")
         response = bot.send_tip(**tip)
+        #If sender hasn't connected their SoundCloud account
         if response.get("error_code") == "invalid_sender":
             out = "Invalid sender %s" % tip['sender']
             bot.invite_new_user(tip['sender']) #TODO implement
@@ -32,12 +34,17 @@ for index in tips:
                 bot.deliver_tip_response(tip, out)
             except(CommentFailedException):
                 out += "\nComment reply failed"
+        #If duplicate tip was sent to ChangeTip API
         elif response.get("error_code") == "duplicate_context_uid":
             out = "Duplicate tip %s handled by ChangeTip API" % tip['context_uid']
             print("No comment made")
+
+       	#If tip was accepted
         elif response.get("state") in ["ok", "accepted"]: #TODO 
             response_tip = response['tip']
             #print("Response Tip: " + str(response['tip'])) #test
+
+            #If receiver hasn't connected their SoundCloud account
             if response_tip['status'] == "out for delivery":
                 out = "The tip for %s from @%s is out for delivery. @%s needs to collect their tip by connecting their ChangeTip account to SoundCloud at %s" % (
                         response_tip['amount_display'], 
@@ -49,6 +56,8 @@ for index in tips:
                     bot.deliver_tip_response(tip, out)
                 except(CommentFailedException):
                     out += "\nComment reply failed"
+
+            # If tip was successful
             elif response_tip['status'] == "finished":
                 out = "The tip has been delivered, %s has been added to @%s's ChangeTip wallet." % (response_tip['amount_display'],
                                         response_tip['receiver'])
@@ -57,10 +66,9 @@ for index in tips:
                     bot.deliver_tip_response(tip, out)
                 except(CommentFailedException):
                     out += "\nComment reply failed"
+        # If tip is a special/unknown case
         else:
-            # Gets to this if sender == receiver
-            # Also gets to this if the output is not recognized.
-            #TODO Handle the above cases
+            # If sender == receiver
             if tip['sender'] == tip['receiver']:
                 bot.on_self_send(tip['context_uid'], tip['message'])
                 out = "You cannot tip yourself!"
@@ -69,6 +77,7 @@ for index in tips:
                     bot.deliver_tip_response(tip, out)
                 except(CommentFailedException):
                     out += "\n****Comment reply failed"
+            # If the output is not recognized
             else:
                 out = "Tip format unrecognized"
                 print("No comment made")
@@ -82,8 +91,14 @@ for index in tips:
         out = "Duplicate tip handled locally\nNo comment made"
     print("Tip processed. Output: ") #test
     print(out) #TODO make this a return value for Celery
-
     print()
 
-
+#Update last_context_uid with highest value
+highest_context_uid = 0
+for index in tips:
+    tip = tips[index]
+    if int(tip['context_uid']) > bot.last_context_uid:
+        bot.highest_context_uid = int(tip['context_uid'])
+bot.last_context_uid = highest_context_uid
+print("==Updated bot.last_context_uid")
 
