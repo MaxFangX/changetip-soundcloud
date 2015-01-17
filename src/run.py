@@ -16,7 +16,7 @@ print("Number of tips found: " + str(len(tips))) #test
 #Loop through dictionary of tips and submit each if it is not a duplicate
 for index in tips:
     tip = tips[index]
-    print("==Processing tip from %s to %s with message'%s'" % (tip['sender'], tip['receiver'], tip['message']))
+    print("==Processing tip %s from %s to %s with message\n'%s'" % (tip['context_uid'], tip['sender'], tip['receiver'], tip['message']))
 
     out = "" #The output for the comment reply and the console
 

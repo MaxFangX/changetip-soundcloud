@@ -56,6 +56,7 @@ class SoundCloudBot(BaseBot):
 
     def check_for_new_tips(self, last):
         """ Poll the site for new tips. Expected to return an array of tips, in the format passed to send_tip """
+        # TODO actually return an array
         print("====Running check_for_new_tips(self, last)") #test
         p = subprocess.Popen(['casperjs', 
                             '../scripts/soundcloud_login.js'],
