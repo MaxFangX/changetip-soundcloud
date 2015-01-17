@@ -51,7 +51,7 @@ class SoundCloudBot(BaseBot):
         """
         if self.last_context_uid == None:
             return # Is not duplicate if last_context_uid not initialized
-        elif int(context_uid) < self.last_context_uid:
+        elif int(context_uid) <= self.last_context_uid:
             raise DuplicateTipException
 
     def check_for_new_tips(self, last):
