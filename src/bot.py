@@ -79,6 +79,7 @@ class SoundCloudBot(BaseBot):
                 tips[int(index)] = tips.pop(index)
             except(Exception):
                 print("****Alert: HTTP request to SoundCloud API for tip %s failed, might be invalid tip")
+                remove_tips.append(index)
         for index in remove_tips:
             tips.pop(index) #Remove invalid tips
 

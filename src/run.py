@@ -71,10 +71,11 @@ for index in tips:
 			else:
 				out = "Tip format unrecognized"
 				print("Replying via comment")
-				try:
-					bot.deliver_tip_response(tip, out)
-				except(CommentFailedException):
-					out += "\nComment reply failed"
+				# TODO ********* Prevent this from commenting every time
+				# try:
+				# 	bot.deliver_tip_response(tip, out)
+				# except(CommentFailedException):
+				# 	out += "\nComment reply failed"
 	except(DuplicateTipException):
 		out = "Duplicate tip handled locally"
 	print("Tip processed. Output: ") #test
