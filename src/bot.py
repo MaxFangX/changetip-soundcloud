@@ -57,17 +57,18 @@ class SoundCloudBot(BaseBot):
                             stderr=subprocess.PIPE)
         out, err = p.communicate()
         tips = json.loads(out.decode('utf-8'))
-        print("Successfully scraped tips")
+        print("Successfully scraped notifications")
         print("Making SoundCloud API calls")
         remove_tips = [] #Array of indexes of tips to remove if they are invalid
         for index in tips:
-            try: #Error handling to catch if notification shows up on bot's feed but the comment doesn't actually exist, or simple if API call fails
+            try: #Error handling to catch if notification shows up on bot's feed but the comment doesn't actually exist, or simply if API call fails
                 
                 context_url = tips[index]['meta']['context_url']
 
                 #String parsing for additional values
                 context_uid = context_url[context_url.rfind('/')+9:]
                 receiver = context_url[23:][:context_url[23:].index('/')]
+                track_url = context_url[:context_url.rfind('/')][context_url[:context_url.rfind('/')].rfind('/')+1:]
 
                 #API Call
                 comment = self.client.get('/comments/' + context_uid)
@@ -81,15 +82,17 @@ class SoundCloudBot(BaseBot):
                     'message': comment.raw_data['body'],
                 })
                 tips[index]['meta'].update({
+                    'track_url': track_url,
                     'timestamp': comment.raw_data['created_at'],
                     'track_id': comment.raw_data['track_id'],
                     #The millisecond index at which the comment was placed
-                    'track_index': comment.raw_data['timestamp'],
+                    'track_index': comment.raw_data['timestamp'], 
+                    
                 })
                 #Convert str indexes to ints
                 tips[int(index)] = tips.pop(index)
             except(Exception):
-                print("****Alert: HTTP request to SoundCloud API for tip %s failed, might be invalid tip")
+                print("****Alert: HTTP request to SoundCloud API for tip %s failed. It may be a deleted tip" % context_uid)
                 remove_tips.append(index)
         for index in remove_tips:
             tips.pop(index) #Remove invalid tips

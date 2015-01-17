@@ -172,11 +172,9 @@ casper.waitForSelector('.ownActivity', function() {
         for(var i = 0; i < links.length; i++){
             var context_url = links[i].href;
             // TODO determine if comment is parent using .parentNode
-            // TODO determine if tip is maxtipbot's own tip
-            var track_url = context_url.substring(0, context_url.lastIndexOf('/')).substring(context_url.substring(0, context_url.lastIndexOf('/')).lastIndexOf('/')+1);
+            // TODO determine if tip is maxtipbot's own comment
 
             console.log("context_url: " + context_url);
-            console.log("track_url: " + track_url);
             
             if(outputAsString){ //Outputting as string deprecated
                 result += i + ": {";
@@ -184,7 +182,6 @@ casper.waitForSelector('.ownActivity', function() {
                 result[i] = {};
                 result[i]['meta'] = {
                     'context_url': context_url,
-                    'track_url': track_url,
                 }
             }
             
