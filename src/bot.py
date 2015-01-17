@@ -63,9 +63,12 @@ class SoundCloudBot(BaseBot):
         for index in tips:
             try:
                 #Error handling to catch if notification shows up on bot's feed but the comment doesn't actually exist, or simple if API call fails
-                comment = self.client.get('/comments/' + tips[index]['context_uid'])
+                context_url = tips[index]['meta']['context_url']
+                context_uid = context_url[context_url.rfind('/')+9:]
+                comment = self.client.get('/comments/' + context_uid)
                 comment.raw_data = json.loads(comment.raw_data)
                 tips[index].update({
+                    'context_uid': context_uid,
                     'sender': comment.raw_data['user']['permalink'],
                     'message': comment.raw_data['body'],
                 })
