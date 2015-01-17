@@ -60,20 +60,25 @@ class SoundCloudBot(BaseBot):
         print("Successfully scraped tips")
         print("Making SoundCloud API calls")
         for index in tips:
-            comment = self.client.get('/comments/' + tips[index]['context_uid'])
-            comment.raw_data = json.loads(comment.raw_data)
-            tips[index].update({
-                'sender': comment.raw_data['user']['permalink'],
-                'message': comment.raw_data['body'],
-            })
-            tips[index]['meta'].update({
-                'timestamp': comment.raw_data['created_at'],
-                'track_id': comment.raw_data['track_id'],
-                #The millisecond index at which the comment was placed
-                'track_index': comment.raw_data['timestamp'],
-            })
-            #Convert str indexes to ints
-            tips[int(index)] = tips.pop(index) 
+            try:
+                #Error handling to catch if notification shows up on bot's feed but the comment doesn't actually exist, or simple if API call fails
+                comment = self.client.get('/comments/' + tips[index]['context_uid'])
+                comment.raw_data = json.loads(comment.raw_data)
+                tips[index].update({
+                    'sender': comment.raw_data['user']['permalink'],
+                    'message': comment.raw_data['body'],
+                })
+                tips[index]['meta'].update({
+                    'timestamp': comment.raw_data['created_at'],
+                    'track_id': comment.raw_data['track_id'],
+                    #The millisecond index at which the comment was placed
+                    'track_index': comment.raw_data['timestamp'],
+                })
+                #Convert str indexes to ints
+                tips[int(index)] = tips.pop(index)
+            except(Exception):
+                print("****Alert: HTTP request to SoundCloud API for tip %s failed, might be invalid tip")
+                tips.pop(index) #Remove invalid tip
         print("Finished tip data gathering")
         print("Finished check_for_new_tips()")
         return tips
