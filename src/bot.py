@@ -59,6 +59,7 @@ class SoundCloudBot(BaseBot):
         tips = json.loads(out.decode('utf-8'))
         print("Successfully scraped tips")
         print("Making SoundCloud API calls")
+        remove_tips = [] #Array of indexes of tips to remove if they are invalid
         for index in tips:
             try:
                 #Error handling to catch if notification shows up on bot's feed but the comment doesn't actually exist, or simple if API call fails
@@ -78,7 +79,9 @@ class SoundCloudBot(BaseBot):
                 tips[int(index)] = tips.pop(index)
             except(Exception):
                 print("****Alert: HTTP request to SoundCloud API for tip %s failed, might be invalid tip")
-                tips.pop(index) #Remove invalid tip
+        for index in remove_tips:
+            tips.pop(index) #Remove invalid tips
+
         print("Finished tip data gathering")
         print("Finished check_for_new_tips()")
         return tips
