@@ -11,9 +11,6 @@ class CommentFailedException(Exception):
 class DuplicateTipException(Exception):
     pass
 
-class HTTPException(Exception):
-    pass
-
 class SoundCloudBot(BaseBot):
     # CHECK FOR ENVIRONMENT VARIABLES
     changetip_api_key = os.getenv("CHANGETIP_API_KEY", "fake_key")
@@ -98,8 +95,8 @@ class SoundCloudBot(BaseBot):
                 })
                 #Convert str indexes to ints
                 tips[int(index)] = tips.pop(index)
-            except(HTTPException):
-                print("****Alert: HTTP request to SoundCloud API for tip %s failed. It may be a deleted tip" % context_uid)
+            except(HTTPError):
+                print("********Alert: HTTP request to SoundCloud API for tip %s failed. It may be a deleted tip" % context_uid)
                 remove_tips.append(index)
         for index in remove_tips:
             tips.pop(index) #Remove invalid tips
