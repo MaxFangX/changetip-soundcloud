@@ -1,5 +1,6 @@
 import os
 from bot import SoundCloudBot
+from bot import CommentFailedException
 from bot import DuplicateTipException
 
 #Reference values
@@ -31,11 +32,13 @@ for index in tips:
 			response_tip = response['tip']
 			#print("Response Tip: " + str(response['tip'])) #test
 			if response_tip['status'] == "out for delivery":
-				out = "The tip for %s is out for delivery. %s needs to collect their tip by connecting their ChangeTip account to SoundCloud at %s" % (response_tip['amount_display'], 
-											response_tip['receiver'], 
-											info_url)
+				out = "The tip for %s from @%s is out for delivery. @%s needs to collect their tip by connecting their ChangeTip account to SoundCloud at %s" % 
+						(response_tip['amount_display'], 
+						response_tip['sender'], 
+						response_tip['receiver'], 
+						info_url)
 			elif response_tip['status'] == "finished":
-				out = "The tip has been delivered, %s has been added to %s's ChangeTip wallet." % (response_tip['amount_display'],
+				out = "The tip has been delivered, %s has been added to @%s's ChangeTip wallet." % (response_tip['amount_display'],
 										response_tip['receiver'])
 		else:
 			# Gets to this if sender == receiver
@@ -46,11 +49,15 @@ for index in tips:
 				out = "You cannot tip yourself!"
 			else:
 				out = "Tip format unrecognized"
+		print("Replying via comment")
+		try:
+			bot.deliver_tip_response(tip, out)
+		except(CommentFailedException):
+			out += "\nComment reply failed"
 	except(DuplicateTipException):
 		out = "Duplicate tip handled locally"
 	print("Tip processed. Output: ") #test
 	print(out) #TODO make this a return value for Celery
-	print("Replying via comment")
-	bot.deliver_tip_response(None)
+
 	print()
 

@@ -5,6 +5,8 @@ import re
 import soundcloud
 
 from changetip.bots.base import BaseBot
+class CommentFailedException(Exception):
+    pass
 
 class DuplicateTipException(Exception):
     pass
@@ -74,9 +76,16 @@ class SoundCloudBot(BaseBot):
     
     # def send_tip(self, sender, receiver, message, context_uid, meta):
 
-    def deliver_tip_response(self, tx):
+    def deliver_tip_response(self, tx, comment_text):
         """ Does the work to post the response to the thread on the site. Returns True or Exception """
-        pass #TODO implement
+        try:
+            pass #TODO get track_id
+            # comment = client.post('/tracks/%d/comments' % track.id, comment={
+            #         'body': 'This is a timed comment',
+            #         'timestamp': 1500
+            #     })
+        except(Exception):
+            raise CommentFailedException
 
     #def deliver_tip_confirmation(self, tx):
 
