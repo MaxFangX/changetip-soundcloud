@@ -32,8 +32,8 @@ for index in tips:
 			response_tip = response['tip']
 			#print("Response Tip: " + str(response['tip'])) #test
 			if response_tip['status'] == "out for delivery":
-				out = "The tip for %s from @%s is out for delivery. @%s needs to collect their tip by connecting their ChangeTip account to SoundCloud at %s" % 
-						(response_tip['amount_display'], 
+				out = "The tip for %s from @%s is out for delivery. @%s needs to collect their tip by connecting their ChangeTip account to SoundCloud at %s" % (
+						response_tip['amount_display'], 
 						response_tip['sender'], 
 						response_tip['receiver'], 
 						info_url)

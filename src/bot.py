@@ -66,13 +66,13 @@ class SoundCloudBot(BaseBot):
             })
             tips[index]['meta'].update({
                 'timestamp': comment.raw_data['created_at'],
-                'track_id': comment.raw_data['track_id']
+                'track_id': comment.raw_data['track_id'],
                 #The millisecond index at which the comment was placed
                 'track_index': comment.raw_data['timestamp'],
             })
             #Convert str indexes to ints
             tips[int(index)] = tips.pop(index) 
-        print("Finished check_for_new_tips")
+        print("Finished check_for_new_tips()")
         return tips
     
     # def send_tip(self, sender, receiver, message, context_uid, meta):
@@ -80,11 +80,12 @@ class SoundCloudBot(BaseBot):
     def deliver_tip_response(self, tx, comment_text):
         """ Does the work to post the response to the thread on the site. Returns True or Exception """
         try:
-            pass
-            # comment = client.post('/tracks/%d/comments' % track.id, comment={
-            #         'body': 'This is a timed comment',
-            #         'timestamp': 1500
-            #     })
+            comment = self.client.post('/tracks/%s/comments' % tx['meta']['track_id'], 
+                comment={
+                    'body': comment_text,
+                    'timestamp': tx['meta']['track_index']
+                })
+        return True
         except(Exception):
             raise CommentFailedException
 
