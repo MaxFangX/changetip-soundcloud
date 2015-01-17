@@ -61,15 +61,23 @@ class SoundCloudBot(BaseBot):
         print("Making SoundCloud API calls")
         remove_tips = [] #Array of indexes of tips to remove if they are invalid
         for index in tips:
-            try:
-                #Error handling to catch if notification shows up on bot's feed but the comment doesn't actually exist, or simple if API call fails
+            try: #Error handling to catch if notification shows up on bot's feed but the comment doesn't actually exist, or simple if API call fails
+                
                 context_url = tips[index]['meta']['context_url']
+
+                #String parsing for additional values
                 context_uid = context_url[context_url.rfind('/')+9:]
+                receiver = context_url[23:][:context_url[23:].index('/')]
+
+                #API Call
                 comment = self.client.get('/comments/' + context_uid)
                 comment.raw_data = json.loads(comment.raw_data)
+
+                #Fill in rest of information
                 tips[index].update({
                     'context_uid': context_uid,
                     'sender': comment.raw_data['user']['permalink'],
+                    'receiver': receiver,
                     'message': comment.raw_data['body'],
                 })
                 tips[index]['meta'].update({

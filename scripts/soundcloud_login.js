@@ -173,20 +173,15 @@ casper.waitForSelector('.ownActivity', function() {
             var context_url = links[i].href;
             // TODO determine if comment is parent using .parentNode
             // TODO determine if tip is maxtipbot's own tip
-            var receiver = context_url.substr(23, context_url.substr(23).indexOf('/'));
             var track_url = context_url.substring(0, context_url.lastIndexOf('/')).substring(context_url.substring(0, context_url.lastIndexOf('/')).lastIndexOf('/')+1);
 
-            console.log("context_uid: " + context_uid);
             console.log("context_url: " + context_url);
-            console.log("receiver: " + receiver);
             console.log("track_url: " + track_url);
             
             if(outputAsString){ //Outputting as string deprecated
                 result += i + ": {";
-                result += "'receiver': " + "'" + sender + "', ";
             }else{ //Add info to result to output as JSON object
                 result[i] = {};
-                result[i]['receiver'] = receiver;
                 result[i]['meta'] = {
                     'context_url': context_url,
                     'track_url': track_url,
