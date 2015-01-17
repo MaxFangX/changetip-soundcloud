@@ -97,8 +97,9 @@ for index in tips:
 highest_context_uid = 0
 for index in tips:
     tip = tips[index]
-    if int(tip['context_uid']) > bot.last_context_uid:
-        bot.highest_context_uid = int(tip['context_uid'])
-bot.last_context_uid = highest_context_uid
+    if int(tip['context_uid']) > highest_context_uid:
+        highest_context_uid = int(tip['context_uid'])
+if bot.last_context_uid == None or highest_context_uid > bot.last_context_uid:
+    bot.last_context_uid = highest_context_uid
 print("==Updated bot.last_context_uid")
 
