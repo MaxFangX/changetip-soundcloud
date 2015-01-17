@@ -34,6 +34,7 @@ for index in tips:
 				out += "\nComment reply failed"
 		elif response.get("error_code") == "duplicate_context_uid":
 			out = "Duplicate tip %s handled by ChangeTip API" % tip['context_uid']
+			print("No comment made")
 		elif response.get("state") in ["ok", "accepted"]: #TODO 
 			response_tip = response['tip']
 			#print("Response Tip: " + str(response['tip'])) #test
@@ -70,8 +71,9 @@ for index in tips:
 					out += "\n****Comment reply failed"
 			else:
 				out = "Tip format unrecognized"
-				print("Replying via comment")
+				print("No comment made")
 				# TODO ********* Prevent this from commenting every time
+				# print("Replying via comment")
 				# try:
 				# 	bot.deliver_tip_response(tip, out)
 				# except(CommentFailedException):
