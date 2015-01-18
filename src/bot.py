@@ -71,26 +71,37 @@ class SoundCloudBot(BaseBot):
 
                 #String parsing for additional values
                 context_uid = int(context_url[context_url.rfind('/')+9:])
-                receiver = context_url[23:][:context_url[23:].index('/')]
                 track_url = context_url[:context_url.rfind('/')][context_url[:context_url.rfind('/')].rfind('/')+1:]
 
-                #API Call
+                #API Call + get other values
                 comment = self.client.get('/comments/%s' % context_uid)
                 comment.raw_data = json.loads(comment.raw_data)
+                message = comment.raw_data['body']
+                sender = comment.raw_data['user']['permalink']
+                timestamp = comment.raw_data['created_at']
+                track_id = comment.raw_data['track_id']
+                track_index = comment.raw_data['timestamp']
+
+                #Decide if tip was intended for artist or other user
+                regex_output = re.search("\B@([A-Za-z0-9_\-]+)", message.replace(self.prefix + self.username, ""))
+                if regex_output == None: #If no other user was mentioned
+                    receiver = context_url[23:][:context_url[23:].index('/')]
+                else: #If another user was mentioned
+                    receiver = regex_output.group(0)[len(self.prefix):]
 
                 #Fill in rest of information
                 tips[index].update({
                     'context_uid': context_uid,
-                    'sender': comment.raw_data['user']['permalink'],
+                    'sender': sender,
                     'receiver': receiver,
-                    'message': comment.raw_data['body'],
+                    'message': message,
                 })
                 tips[index]['meta'].update({
                     'track_url': track_url,
-                    'timestamp': comment.raw_data['created_at'],
-                    'track_id': comment.raw_data['track_id'],
+                    'timestamp': timestamp,
+                    'track_id': track_id,
                     #The millisecond index at which the comment was placed
-                    'track_index': comment.raw_data['timestamp'], 
+                    'track_index': track_index, 
                     
                 })
                 #Convert str indexes to ints
