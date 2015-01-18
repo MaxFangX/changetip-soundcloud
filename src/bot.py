@@ -81,6 +81,7 @@ class SoundCloudBot(BaseBot):
                 timestamp = comment.raw_data['created_at']
                 track_id = comment.raw_data['track_id']
                 track_index = comment.raw_data['timestamp']
+                user_id = comment.raw_data['user']['id']
 
                 #Decide if tip was intended for artist or other user
                 regex_output = re.search("\B@([A-Za-z0-9_\-]+)", message.replace(self.prefix + self.username, ""))
@@ -97,6 +98,7 @@ class SoundCloudBot(BaseBot):
                     'message': message,
                 })
                 tips[index]['meta'].update({
+                    'user_id': user_id,
                     'track_url': track_url,
                     'timestamp': timestamp,
                     'track_id': track_id,
