@@ -10,7 +10,8 @@ def run():
     global bot, tips # Global variables for easier debugging
 
     #Reference values
-    info_url = "https://www.changetip.com/tip-online/soundcloud" 
+    info_url = "https://www.changetip.com/tip-online/soundcloud"
+    get_started = "To send your first tip, login with your SoundCloud account on ChangeTip: %s" % info_url
     #TODO make sure this is supported by the site
 
     # GET TIPS
@@ -21,7 +22,7 @@ def run():
     #Loop through dictionary of tips and submit each if it is not a duplicate
     for index in tips:
         tip = tips[index]
-        print("===Processing tip %s from %s to %s with message\n'%s'" % (tip['context_uid'], tip['sender'], tip['receiver'], tip['message']))
+        print("===Processing tip %s from @%s to @%s with message\n'%s'" % (tip['context_uid'], tip['sender'], tip['receiver'], tip['message']))
 
         out = "" #The output for the comment reply and the console
 
@@ -32,13 +33,13 @@ def run():
             response = bot.send_tip(**tip)
             #If sender hasn't connected their SoundCloud account
             if response.get("error_code") == "invalid_sender":
-                out = "Invalid sender %s" % tip['sender']
+                out = "Hey @%s! %s" % (tip['sender'], get_started)
                 bot.invite_new_user(tip['sender']) #TODO implement
                 print("Replying via comment")
                 try:
                     bot.deliver_tip_response(tip, out)
                 except(CommentFailedException):
-                    out += "\nComment reply failed"
+                    out += "\n********Comment reply failed"
             #If duplicate tip was sent to ChangeTip API
             elif response.get("error_code") == "duplicate_context_uid":
                 out = "Duplicate tip %s handled by ChangeTip API" % tip['context_uid']
@@ -51,37 +52,32 @@ def run():
 
                 #If receiver hasn't connected their SoundCloud account
                 if response_tip['status'] == "out for delivery":
-                    out = "The tip for %s from @%s is out for delivery. @%s needs to collect their tip by connecting their ChangeTip account to SoundCloud at %s" % (
-                            response_tip['amount_display'], 
-                            response_tip['sender'], 
-                            response_tip['receiver'], 
-                            info_url)
+                    out = "The tip for %s from @%s is out for delivery. @%s, you need to collect your tip by connecting your ChangeTip account to SoundCloud at %s" % (response_tip['amount_display'], response_tip['sender'], response_tip['receiver'], info_url)
                     print("Replying via comment")
                     try:
                         bot.deliver_tip_response(tip, out)
                     except(CommentFailedException):
-                        out += "\nComment reply failed"
+                        out += "\n********Comment reply failed"
 
                 # If tip was successful
                 elif response_tip['status'] == "finished":
-                    out = "The tip has been delivered, %s has been added to @%s's ChangeTip wallet." % (response_tip['amount_display'],
-                                            response_tip['receiver'])
+                    out = "The tip from @%s has been delivered, %s has been added to @%s's ChangeTip wallet." % (response_tip['sender'], response_tip['amount_display'], response_tip['receiver'])
                     print("Replying via comment")
                     try:
                         bot.deliver_tip_response(tip, out)
                     except(CommentFailedException):
-                        out += "\nComment reply failed"
+                        out += "\n********Comment reply failed"
             # If tip is a special/unknown case
             else:
                 # If sender == receiver
                 if tip['sender'] == tip['receiver']:
                     bot.on_self_send(tip['context_uid'], tip['message'])
-                    out = "You cannot tip yourself!"
+                    out = "@%s, you cannot tip yourself!" % tip['receiver']
                     print("Replying via comment")
                     try:
                         bot.deliver_tip_response(tip, out)
                     except(CommentFailedException):
-                        out += "\n****Comment reply failed"
+                        out += "\n********Comment reply failed"
                 # If the output is not recognized
                 else:
                     out = "Tip format unrecognized"
