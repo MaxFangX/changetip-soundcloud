@@ -11,6 +11,12 @@ class CommentFailedException(Exception):
 class DuplicateTipException(Exception):
     pass
 
+class HTTPError(Exception):
+    pass
+
+class TipAlreadyProcessedException(Exception):
+    pass
+
 class SoundCloudBot(BaseBot):
     # CHECK FOR ENVIRONMENT VARIABLES
     changetip_api_key = os.getenv("CHANGETIP_API_KEY", "fake_key")
@@ -73,6 +79,10 @@ class SoundCloudBot(BaseBot):
                 context_uid = int(context_url[context_url.rfind('/')+9:])
                 track_url = context_url[:context_url.rfind('/')][context_url[:context_url.rfind('/')].rfind('/')+1:]
 
+                #Prevent SoundCloud API calls if tip has already been processed
+                if self.last_context_uid != None and context_uid <= self.last_context_uid:
+                    raise TipAlreadyProcessedException
+
                 #API Call + get other values
                 comment = self.client.get('/comments/%s' % context_uid)
                 comment.raw_data = json.loads(comment.raw_data)
@@ -100,7 +110,7 @@ class SoundCloudBot(BaseBot):
                 })
                 tips[index]['meta'].update({
                     'sender_id': sender_id,
-                    'sender_avatar': sender_avatar.
+                    'sender_avatar': sender_avatar,
                     'track_url': track_url,
                     'timestamp': timestamp,
                     'track_id': track_id,
@@ -112,6 +122,10 @@ class SoundCloudBot(BaseBot):
             except(HTTPError):
                 print("********Alert: HTTP request to SoundCloud API for tip %s failed. It may be a deleted tip" % context_uid)
                 remove_tips.append(index)
+            except(TipAlreadyProcessedException):
+                print("Tip %s on track %s has already been processed." % (context_uid, track_url))
+                remove_tips.append(index)
+
         for index in remove_tips:
             tips.pop(index) #Remove invalid tips
 
