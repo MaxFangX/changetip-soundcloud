@@ -81,7 +81,8 @@ class SoundCloudBot(BaseBot):
                 timestamp = comment.raw_data['created_at']
                 track_id = comment.raw_data['track_id']
                 track_index = comment.raw_data['timestamp']
-                user_id = comment.raw_data['user']['id']
+                sender_id = comment.raw_data['user']['id']
+                sender_avatar = comment.raw_data['user']['avatar_url']
 
                 #Decide if tip was intended for artist or other user
                 regex_output = re.search("\B@([A-Za-z0-9_\-]+)", message.replace(self.prefix + self.username, ""))
@@ -90,7 +91,7 @@ class SoundCloudBot(BaseBot):
                 else: #If another user was mentioned
                     receiver = regex_output.group(0)[len(self.prefix):]
 
-                #Fill in rest of information
+                #Fill in information
                 tips[index].update({
                     'context_uid': context_uid,
                     'sender': sender,
@@ -98,13 +99,13 @@ class SoundCloudBot(BaseBot):
                     'message': message,
                 })
                 tips[index]['meta'].update({
-                    'user_id': user_id,
+                    'sender_id': sender_id,
+                    'sender_avatar': sender_avatar.
                     'track_url': track_url,
                     'timestamp': timestamp,
                     'track_id': track_id,
                     #The millisecond index at which the comment was placed
                     'track_index': track_index, 
-                    
                 })
                 #Convert str indexes to ints
                 tips[int(index)] = tips.pop(index)
