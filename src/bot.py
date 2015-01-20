@@ -87,11 +87,11 @@ class SoundCloudBot(BaseBot):
                 comment = self.client.get('/comments/%s' % context_uid)
                 comment.raw_data = json.loads(comment.raw_data)
                 message = comment.raw_data['body']
-                sender = comment.raw_data['user']['permalink']
+                sender = comment.raw_data['user']['id']
+                sender_display = comment.raw_data['user']['permalink']
                 timestamp = comment.raw_data['created_at']
                 track_id = comment.raw_data['track_id']
                 track_index = comment.raw_data['timestamp']
-                sender_id = comment.raw_data['user']['id']
                 sender_avatar = comment.raw_data['user']['avatar_url']
 
                 #Decide if tip was intended for artist or other user
@@ -109,7 +109,7 @@ class SoundCloudBot(BaseBot):
                     'message': message,
                 })
                 tips[index]['meta'].update({
-                    'sender_id': sender_id,
+                    'sender_display': sender_display,
                     'sender_avatar': sender_avatar,
                     'track_url': track_url,
                     'timestamp': timestamp,
