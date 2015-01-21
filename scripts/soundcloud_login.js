@@ -8,13 +8,6 @@ if(pass == undefined){
     throw new Error("Need to set CHANGETIP_BOT_PASS' environment variable");
 };
 
-var printEnabled = false; //Set to true for debugging script
-var printIfEnabled = function(message) {
-    if(printEnabled){
-        console.log(message);
-    }
-}
-
 var casper = require('casper').create({
     pageSettings: {
         loadImages: true,
@@ -23,6 +16,20 @@ var casper = require('casper').create({
     verbose: false,
     logLevel: "debug"
 });
+
+var captureEnabled = true;
+var captureIfEnabled = function(filename) {
+    if(captureEnabled){
+        casper.capture(filename);
+    }
+}
+
+var printEnabled = false; //Set to true for debugging script
+var printIfEnabled = function(message) {
+    if(printEnabled){
+        console.log(message);
+    }
+}
 
 casper.on('remote.message', function(msg) {
     printIfEnabled('REMOTE: ' + msg);
@@ -38,7 +45,7 @@ casper.start('http://soundcloud.com', function(){
     printIfEnabled("**Got to SoundCloud homepage.");
     printIfEnabled("Title: "+ this.getTitle());
     printIfEnabled("Next - clicking login button");
-    this.capture('_isitloggedin.png');
+    captureIfEnabled('_isitloggedin.png');
     printIfEnabled("Is .g-tabs-item detected: " + 
         casper.exists('.g-tabs-item'));
     printIfEnabled("Is .userNav__username detected: " +
@@ -93,12 +100,12 @@ casper.withPopup(/connect\?/, function() {
     if(this.exists('#authorize')){
         printIfEnabled("Login button exists");
     };
-    this.capture('0beforesubmit.png')
+    captureIfEnabled('0beforesubmit.png')
     this.click('#authorize');
 });
 
 casper.wait(3000, function() {
-    this.capture('1mainpage.png');
+    captureIfEnabled('1mainpage.png');
     printIfEnabled("POPUPS.LENGTH: "+ casper.popups.length);
 })
 casper.wait(3000, function(){});
@@ -110,7 +117,7 @@ casper.then(function(){
 
 casper.waitForPopup(/connect\?/, function() {
     casper.withPopup(/connect\?/, function() {
-        this.capture('2popup.png');
+        captureIfEnabled('2popup.png');
         printIfEnabled(this.evaluate(function() {
             return document.title;
         }))
@@ -118,26 +125,26 @@ casper.waitForPopup(/connect\?/, function() {
             return document.querySelector('#recaptcha_area');
         })) 
         if(casper.exists('#recaptcha_area')){
-            this.capture('error1.png');
+            captureIfEnabled('error1.png');
             throw new Error("Ran into recaptcha, use a proxy.");
         }
         else{
             printIfEnabled('Somehow got a popup without captcha');
-            this.capture('error2.png');
+            captureIfEnabled('error2.png');
         } 
     });
 }, function() {
     casper.then(function() {
         printIfEnabled("****Logged in successfully!");
         printIfEnabled("Popups length: " + this.popups.length)
-        this.capture('3loggedin.png')
+        captureIfEnabled('3loggedin.png')
         printIfEnabled("Logged in title: " + this.evaluate(function() {
             return document.title;
         }));
     });
 
     casper.thenOpen("http://soundcloud.com/notifications").waitForSelector('.ownActivity', function() {
-                this.capture('4final.png')
+                captureIfEnabled('4final.png')
                 printIfEnabled("Notification title: " + this.getTitle());
             }
     );
@@ -152,7 +159,7 @@ casper.reload(function() {
 casper.waitForSelector('.ownActivity', function() {
     printIfEnabled("Notifications page loaded, start SCRAPING");
     //Screenshot with unique timestamp for every time the page refreshes
-    this.capture('5startscraping.png');
+    captureIfEnabled('5startscraping.png');
     //Scrape info
     var output = this.evaluate(function() {
         //Scrape links to comments
