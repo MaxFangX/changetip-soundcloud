@@ -8,10 +8,10 @@ if(pass == undefined){
     throw new Error("Need to set CHANGETIP_BOT_PASS' environment variable");
 };
 
-var printEnabled = false;
-var printIfEnabled = function(whateverstringidgaf) {
+var printEnabled = false; //Set to true for debugging script
+var printIfEnabled = function(message) {
     if(printEnabled){
-        console.log(whateverstringidgaf)
+        console.log(message);
     }
 }
 
@@ -48,8 +48,6 @@ casper.start('http://soundcloud.com', function(){
         casper.thenBypass(12);
     }
 });
-
-//div.header__userNav
 
 casper.waitForSelector('.header__login', function() {
     printIfEnabled("**Clicked login button.");
@@ -154,7 +152,6 @@ casper.reload(function() {
 casper.waitForSelector('.ownActivity', function() {
     printIfEnabled("Notifications page loaded, start SCRAPING");
     //Screenshot with unique timestamp for every time the page refreshes
-    //this.capture(Math.round(new Date().getTime()/100)%100000+".png");
     this.capture('5startscraping.png');
     //Scrape info
     var output = this.evaluate(function() {
@@ -163,7 +160,6 @@ casper.waitForSelector('.ownActivity', function() {
         var result = {}
         for(var i = 0; i < links.length; i++){
             var context_url = links[i].href;
-            // TODO determine if comment is parent using .parentNode
             // TODO determine if tip is maxtipbot's own comment
 
             console.log("context_url: " + context_url);
