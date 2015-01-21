@@ -8,11 +8,6 @@ if(pass == undefined){
     throw new Error("Need to set CHANGETIP_BOT_PASS' environment variable");
 };
 
-//True to output as Python readable string.
-//False to output as JSON Object
-//Outputting as string deprecated 1/14/15
-var outputAsString = false;
-
 var printEnabled = false;
 var printIfEnabled = function(whateverstringidgaf) {
     if(printEnabled){
@@ -162,13 +157,10 @@ casper.waitForSelector('.ownActivity', function() {
     //this.capture(Math.round(new Date().getTime()/100)%100000+".png");
     this.capture('5startscraping.png');
     //Scrape info
-    var output = this.evaluate(function(outputAsString) {
+    var output = this.evaluate(function() {
         //Scrape links to comments
         var links = document.querySelectorAll('.ownActivity.comment .sc-link-light');
         var result = {}
-        if(outputAsString){
-            result = '{'
-        }
         for(var i = 0; i < links.length; i++){
             var context_url = links[i].href;
             // TODO determine if comment is parent using .parentNode
@@ -176,25 +168,15 @@ casper.waitForSelector('.ownActivity', function() {
 
             console.log("context_url: " + context_url);
             
-            if(outputAsString){ //Outputting as string deprecated
-                result += i + ": {";
-            }else{ //Add info to result to output as JSON object
-                result[i] = {};
-                result[i]['meta'] = {
-                    'context_url': context_url,
-                }
+            //Add info to result to output as JSON object
+            result[i] = {};
+            result[i]['meta'] = {
+                'context_url': context_url,
             }
-            
         }
-        if(outputAsString){
-            result += "}"
-        }else{
-            result = JSON.stringify(result);
-        }
-
+        result = JSON.stringify(result);
         return result;
-    }, outputAsString);
-    //casper.echo("Output: ");
+    });
     casper.echo(output);
 
 });
