@@ -72,9 +72,9 @@ class SoundCloudBot(BaseBot):
         remove_tips = [] #Array of indexes of tips to remove if they are invalid
         
         for index in tips: #Convert str index to ints
-        	tips[int(index)] = tips.pop(index)
-		
-		print("Making SoundCloud API calls")
+            tips[int(index)] = tips.pop(index)
+        
+        print("Making SoundCloud API calls")
         for index in tips:
             try: #Error handling to catch if notification shows up on bot's feed but the comment doesn't actually exist, or simply if API call fails
                 
@@ -85,9 +85,8 @@ class SoundCloudBot(BaseBot):
                 track_url = context_url[:context_url.rfind('/')][context_url[:context_url.rfind('/')].rfind('/')+1:]
 
                 #Prevent SoundCloud API calls if tip has already been processed
-                #TODO some kind of bug right here
-                # if self.last_context_uid != None and context_uid <= self.last_context_uid:
-                #     raise TipAlreadyProcessedException
+                if self.last_context_uid != None and context_uid <= self.last_context_uid:
+                    raise TipAlreadyProcessedException
 
                 #API Call + get other values
                 comment = self.client.get('/comments/%s' % context_uid)
@@ -128,7 +127,6 @@ class SoundCloudBot(BaseBot):
                 remove_tips.append(index)
             except(TipAlreadyProcessedException):
                 print("Tip %s on track %s has already been processed." % (context_uid, track_url))
-                #TODO some kind of bug right here
                 remove_tips.append(index)
 
         for index in remove_tips:
