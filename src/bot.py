@@ -68,8 +68,13 @@ class SoundCloudBot(BaseBot):
         out, err = p.communicate()
         tips = json.loads(out.decode('utf-8'))
         print("Successfully scraped notifications")
-        print("Making SoundCloud API calls")
+        
         remove_tips = [] #Array of indexes of tips to remove if they are invalid
+        
+        for index in tips: #Convert str index to ints
+        	tips[int(index)] = tips.pop(index)
+		
+		print("Making SoundCloud API calls")
         for index in tips:
             try: #Error handling to catch if notification shows up on bot's feed but the comment doesn't actually exist, or simply if API call fails
                 
@@ -118,8 +123,6 @@ class SoundCloudBot(BaseBot):
                     #The millisecond index at which the comment was placed
                     'track_index': track_index, 
                 })
-                #Convert str indexes to ints
-                tips[int(index)] = tips.pop(index)
             except(HTTPError):
                 print("********Alert: HTTP request to SoundCloud API for tip %s failed. It may be a deleted tip" % context_uid)
                 remove_tips.append(index)
