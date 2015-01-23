@@ -163,7 +163,7 @@ casper.waitForSelector('.ownActivity', function() {
     //Scrape info
     var output = this.evaluate(function() {
         //Scrape links to comments
-        var links = document.querySelectorAll('.ownActivity.comment .sc-link-light');
+        var links = document.querySelectorAll('.ownActivity__bottom .sc-link-light');
         var result = {}
         for(var i = 0; i < links.length; i++){
             var context_url = links[i].href;
