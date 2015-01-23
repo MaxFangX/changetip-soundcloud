@@ -30,6 +30,12 @@ class SoundCloudBot(BaseBot):
     assert CHANGETIP_BOT_USER != "fake_bot_user", "Need to set CHANGETIP_BOT_USER environment variable"
     assert CHANGETIP_BOT_PASS != "fake_bot_pass", "Need to set CHANGETIP_BOT_PASS environment variable"
 
+    channel = "soundcloud"
+    username = "maxtipbot"  # username on the site
+    prefix = "@"
+    last_context_uid = None
+    proxy = None
+
     #Initialize the single SoundCloud client
     client = soundcloud.Client(
         client_id=SOUNDCLOUD_CLIENT_ID,
@@ -37,13 +43,8 @@ class SoundCloudBot(BaseBot):
         username=CHANGETIP_BOT_USER,
         password=CHANGETIP_BOT_PASS,
     )
+    soundcloud_id = json.loads(client.get('/users/%s' % username).raw_data)['id']
     print("SoundCloud API client initialized")
-
-    channel = "soundcloud"
-    username = "maxtipbot"  # username on the site
-    prefix = "@"
-    last_context_uid = None
-    proxy = None
 
     # How many seconds the bot runner should wait before checking for new tips
     new_tip_check_delay = 30
@@ -132,7 +133,7 @@ class SoundCloudBot(BaseBot):
                 print("********Alert: HTTP request to SoundCloud API for tip %s failed. It may be a deleted tip" % context_uid)
                 remove_tips.append(index)
             except(TipAlreadyProcessedException):
-                print("Tip %s on track %s has already been processed." % (context_uid, track_url))
+                print("Tip %s on %s already processed." % (context_uid, track_url))
                 remove_tips.append(index)
 
         for index in remove_tips:
