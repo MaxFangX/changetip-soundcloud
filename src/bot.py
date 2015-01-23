@@ -113,12 +113,14 @@ class SoundCloudBot(BaseBot):
                 #Fill in information
                 tips[index].update({
                     'context_uid': context_uid,
-                    'sender': sender,
-                    'receiver': receiver,
+                    #ChangeTip API call must have parameters named 'sender' and 'receiver'
+                    'sender': sender_id,
+                    'receiver': receiver_id,
                     'message': message,
                 })
                 tips[index]['meta'].update({
-                    'sender_id': sender_id,
+                    'sender_display': sender,
+                    'receiver_display': receiver,
                     'sender_avatar': sender_avatar,
                     'track_url': track_url,
                     'timestamp': timestamp,
