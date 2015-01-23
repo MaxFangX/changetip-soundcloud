@@ -17,7 +17,7 @@ def run():
     # GET TIPS
     print("========Initializing script")
     tips = bot.check_for_new_tips(None)
-    print("Number of to submit: %s\n" % len(tips)) #test
+    print("Number of tips to submit: %s\n" % len(tips)) #test
 
     #Loop through dictionary of tips and submit each if it is not a duplicate
     for index in tips:
