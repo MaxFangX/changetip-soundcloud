@@ -88,16 +88,20 @@ class SoundCloudBot(BaseBot):
                 if self.last_context_uid != None and context_uid <= self.last_context_uid:
                     raise TipAlreadyProcessedException
 
-                #API Call + get other values
+                #API Calls + get other values
                 comment = self.client.get('/comments/%s' % context_uid)
                 comment.raw_data = json.loads(comment.raw_data)
                 message = comment.raw_data['body']
                 sender = comment.raw_data['user']['permalink']
                 timestamp = comment.raw_data['created_at']
-                track_id = comment.raw_data['track_id']
                 track_index = comment.raw_data['timestamp']
                 sender_id = comment.raw_data['user']['id']
                 sender_avatar = comment.raw_data['user']['avatar_url']
+                track_id = comment.raw_data['track_id']
+
+                track = self.client.get('/tracks/%s' % track_id)
+                track.raw_data = json.loads(track.raw_data)
+                receiver_id = track.raw_data['user_id']
 
                 #Decide if tip was intended for artist or other user
                 regex_output = re.search("\B@([A-Za-z0-9_\-]+)", message.replace(self.prefix + self.username, ""))
