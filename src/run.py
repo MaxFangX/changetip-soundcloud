@@ -52,7 +52,7 @@ def run():
 
                 #If receiver hasn't connected their SoundCloud account
                 if response_tip['status'] == "out for delivery":
-                    out = "The tip for %s from @%s is out for delivery. @%s, you need to collect your tip by connecting your ChangeTip account to SoundCloud at %s" % (response_tip['amount_display'], response_tip['meta']['sender_display'], response_tip['meta']['receiver_display'], info_url)
+                    out = "The tip for %s from @%s is out for delivery. @%s, you need to collect your tip by connecting your ChangeTip account to SoundCloud at %s" % (response_tip['amount_display'], tip['meta']['sender_display'], tip['meta']['receiver_display'], info_url)
                     print("Replying via comment")
                     try:
                         bot.deliver_tip_response(tip, out)
@@ -61,7 +61,7 @@ def run():
 
                 # If tip was successful
                 elif response_tip['status'] == "finished":
-                    out = "The tip from @%s has been delivered, %s has been added to @%s's ChangeTip wallet." % (response_tip['meta']['sender_display'], response_tip['amount_display'], response_tip['meta']['receiver_display'])
+                    out = "The tip from @%s has been delivered, %s has been added to @%s's ChangeTip wallet." % (tip['meta']['sender_display'], response_tip['amount_display'], tip['meta']['receiver_display'])
                     print("Replying via comment")
                     try:
                         bot.deliver_tip_response(tip, out)
