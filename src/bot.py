@@ -17,6 +17,9 @@ class HTTPError(Exception):
 class TipAlreadyProcessedException(Exception):
     pass
 
+class OwnCommentException(Exception):
+    pass
+
 class SoundCloudBot(BaseBot):
     # CHECK FOR ENVIRONMENT VARIABLES
     changetip_api_key = os.getenv("CHANGETIP_API_KEY", "fake_key")
@@ -92,13 +95,18 @@ class SoundCloudBot(BaseBot):
                 #API Calls + get other values
                 comment = self.client.get('/comments/%s' % context_uid)
                 comment.raw_data = json.loads(comment.raw_data)
+
                 message = comment.raw_data['body']
                 sender = comment.raw_data['user']['permalink']
-                timestamp = comment.raw_data['created_at']
-                track_index = comment.raw_data['timestamp']
-                sender_id = comment.raw_data['user']['id']
                 sender_avatar = comment.raw_data['user']['avatar_url']
+                sender_id = comment.raw_data['user']['id']
+                timestamp = comment.raw_data['created_at']
                 track_id = comment.raw_data['track_id']
+                track_index = comment.raw_data['timestamp']
+
+                #Check if comment is own comment
+                if sender_id == self.soundcloud_id:
+                    raise OwnCommentException
 
                 track = self.client.get('/tracks/%s' % track_id)
                 track.raw_data = json.loads(track.raw_data)
@@ -134,6 +142,9 @@ class SoundCloudBot(BaseBot):
                 remove_tips.append(index)
             except(TipAlreadyProcessedException):
                 print("Tip %s on %s already processed." % (context_uid, track_url))
+                remove_tips.append(index)
+            except(OwnCommentException):
+                print("Own comment %s detected" % context_uid)
                 remove_tips.append(index)
 
         for index in remove_tips:
