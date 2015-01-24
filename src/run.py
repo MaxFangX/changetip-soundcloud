@@ -17,10 +17,11 @@ def run():
     # GET TIPS
     print("========Initializing script")
     tips = bot.check_for_new_tips(None)
-    print("Number of tips to submit: %s\n" % len(tips)) #test
+    print("Number of tips to submit: %s" % len(tips)) #test
 
     #Loop through dictionary of tips and submit each if it is not a duplicate
     for index in tips:
+        print()
         tip = tips[index]
         print("===Processing tip %s from @%s to @%s with message\n'%s'" % (tip['context_uid'], tip['meta']['sender_display'], tip['meta']['receiver_display'], tip['message']))
 
@@ -93,8 +94,7 @@ def run():
         except(DuplicateTipException):
             out = "Duplicate tip handled locally"
             print(out)
-
-        print()
+        
 
     #Update last_context_uid with highest value
     highest_context_uid = 0
@@ -105,9 +105,9 @@ def run():
     if bot.last_context_uid == None or highest_context_uid > bot.last_context_uid:
         bot.last_context_uid = highest_context_uid
     print("==Updated bot.last_context_uid")
-
+    print("====Finished cycle\n")
 run()
 
-# Comment this out if you only want the script to run once
-# while True:
-#     run()
+# Make False if you only want the script to run once
+while True:
+    run()

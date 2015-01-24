@@ -137,6 +137,7 @@ class SoundCloudBot(BaseBot):
                     #The millisecond index at which the comment was placed
                     'track_index': track_index, 
                 })
+                print("=Processing comment %s successful" % context_uid)
             except(HTTPError):
                 print("********Alert: HTTP request to SoundCloud API for tip %s failed. It may be a deleted tip" % context_uid)
                 remove_tips.append(index)
