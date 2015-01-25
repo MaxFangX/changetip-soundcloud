@@ -39,6 +39,9 @@ class SoundCloudBot(BaseBot):
     last_context_uid = None
     proxy = None
 
+    # How many seconds the bot runner should wait before checking for new tips
+    new_tip_check_delay = 20
+
     #Initialize the single SoundCloud client
     client = soundcloud.Client(
         client_id=SOUNDCLOUD_CLIENT_ID,
@@ -49,8 +52,6 @@ class SoundCloudBot(BaseBot):
     soundcloud_id = json.loads(client.get('/users/%s' % username).raw_data)['id']
     print("SoundCloud API client initialized")
 
-    # How many seconds the bot runner should wait before checking for new tips
-    new_tip_check_delay = 30
 
     def dupecheck(self, context_uid):
         """ Check locally for duplicates before submitting

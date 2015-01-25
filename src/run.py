@@ -1,4 +1,5 @@
 import os
+import time
 from bot import SoundCloudBot
 from bot import CommentFailedException
 from bot import DuplicateTipException
@@ -110,4 +111,5 @@ run()
 
 # Make False if you only want the script to run once
 while True:
+    time.sleep(bot.new_tip_check_delay)
     run()
