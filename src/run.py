@@ -6,13 +6,13 @@ from bot import DuplicateTipException
 bot = SoundCloudBot() # Global variables for easier debugging
 tips = None
 
+#Reference values
+info_url = "https://www.changetip.com/tip-online/soundcloud"
+get_started = "To send your first tip, login with your SoundCloud account on ChangeTip: %s" % info_url
+#TODO make sure this is supported by the site
+
 def run():
     global bot, tips # Global variables for easier debugging
-
-    #Reference values
-    info_url = "https://www.changetip.com/tip-online/soundcloud"
-    get_started = "To send your first tip, login with your SoundCloud account on ChangeTip: %s" % info_url
-    #TODO make sure this is supported by the site
 
     # GET TIPS
     print("========Initializing script")
