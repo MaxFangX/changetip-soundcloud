@@ -72,9 +72,7 @@ casper.waitForSelector('.ownActivity', function() {
 
 }, function(){
     casper.echo("not logged in");
-});
-
-casper.wait(30000); //Wait 30 seconds before next refresh
+}, 10000);
 
 casper.run();
 
