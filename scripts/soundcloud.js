@@ -39,126 +39,14 @@ casper.on('page.error', function(msg, trace) {
     printIfEnabled('Error: ' + msg, 'ERROR');
 });
 
-casper.start('http://soundcloud.com', function(){
-    // TODO investigate why getting to soundcloud.com sometimes
-    // takes so long
-    printIfEnabled("**Got to SoundCloud homepage.");
-    printIfEnabled("Title: "+ this.getTitle());
-    printIfEnabled("Next - clicking login button");
-    captureIfEnabled('_isitloggedin.png');
-    printIfEnabled("Is .g-tabs-item detected: " + 
-        casper.exists('.g-tabs-item'));
-    printIfEnabled("Is .userNav__username detected: " +
-        casper.exists('.userNav__username'));
-    //Skips trying to log in if already logged in
-    if(casper.exists('.g-tabs-item')){
-        casper.thenBypass(12);
-    }
-});
+casper.start('http://soundcloud.com/notifications', function(){
 
-casper.waitForSelector('.header__login', function() {
-    printIfEnabled("**Clicked login button.");
-    this.click('.header__login');
-    printIfEnabled("Next - loading popup");
-}, function(){
-    throw new Error("Could not find login button");
-}, 30000);
-
-//STEP 6
-casper.waitForPopup(/connect/, function() {
-    printIfEnabled('**Loaded login popup.');
-    printIfEnabled("casper.popups length: " + casper.popups.length);
-    printIfEnabled("casper.popups[0]: " + casper.popups[0]);
-    printIfEnabled("Next - filling out form");
-}, function() {
-    printIfEnabled("Waiting for popup timed out at 30 seconds.");
-    printIfEnabled("Popups.length: " + this.popups.length);
-    throw new Error("Login popup didn't load");
-}, 30000);
-
-casper.withPopup(/connect\?/, function() {
-    printIfEnabled("**Filling out and submitting login form");
-    printIfEnabled("Does oauth2 form exist?")
-    if(this.exists('#oauth2-login-form')){
-        printIfEnabled("oauth2 form exists");
-    };
-    this.fillSelectors('#oauth2-login-form', {
-        'input[id="username"]': user,
-        'input[id="password"]': pass,
-    }, false);
-    printIfEnabled("Printing username form value: ");
-    printIfEnabled(this.evaluate(function() {
-        return document.querySelector('#username').value;
-    }));
-    printIfEnabled("Next - clicking login button on popup");
-});
-
-casper.wait(3000, function() {});
-
-casper.withPopup(/connect\?/, function() {
-    printIfEnabled("Does login button exist?");
-    if(this.exists('#authorize')){
-        printIfEnabled("Login button exists");
-    };
-    captureIfEnabled('0beforesubmit.png')
-    this.click('#authorize');
-});
-
-casper.wait(3000, function() {
-    captureIfEnabled('1mainpage.png');
-    printIfEnabled("POPUPS.LENGTH: "+ casper.popups.length);
-})
-casper.wait(3000, function(){});
-
-casper.then(function(){
-    printIfEnabled("Checking if login popup still exists");
-    printIfEnabled("popups.length: " + this.popups.length);
-});
-
-casper.waitForPopup(/connect\?/, function() {
-    casper.withPopup(/connect\?/, function() {
-        captureIfEnabled('2popup.png');
-        printIfEnabled(this.evaluate(function() {
-            return document.title;
-        }))
-        printIfEnabled(this.evaluate(function() {
-            return document.querySelector('#recaptcha_area');
-        })) 
-        if(casper.exists('#recaptcha_area')){
-            captureIfEnabled('error1.png');
-            throw new Error("Ran into recaptcha, use a proxy.");
-        }
-        else{
-            printIfEnabled('Somehow got a popup without captcha');
-            captureIfEnabled('error2.png');
-        } 
-    });
-}, function() {
-    casper.then(function() {
-        printIfEnabled("****Logged in successfully!");
-        printIfEnabled("Popups length: " + this.popups.length)
-        captureIfEnabled('3loggedin.png')
-        printIfEnabled("Logged in title: " + this.evaluate(function() {
-            return document.title;
-        }));
-    });
-
-    casper.thenOpen("http://soundcloud.com/notifications").waitForSelector('.ownActivity', function() {
-                captureIfEnabled('4final.png')
-                printIfEnabled("Notification title: " + this.getTitle());
-            }
-    );
-}, 5000); //5 Seconds for popup to still be there
-
-//SCRAPING PAGE
-//TODO implement scraping page
-casper.reload(function() {
-    printIfEnabled("Reloaded notifications page");
 });
 
 casper.waitForSelector('.ownActivity', function() {
+    captureIfEnabled('4final.png')
+    printIfEnabled("Notification title: " + this.getTitle());
     printIfEnabled("Notifications page loaded, start SCRAPING");
-    //Screenshot with unique timestamp for every time the page refreshes
     captureIfEnabled('5startscraping.png');
     //Scrape info
     var output = this.evaluate(function() {
