@@ -66,10 +66,16 @@ class SoundCloudBot(BaseBot):
         # TODO actually return an array
         print("====Running check_for_new_tips(self, last)") #test
         p = subprocess.Popen(['casperjs', 
-                            '../scripts/soundcloud_login.js'],
+                            '../scripts/soundcloud.js'],
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
         out, err = p.communicate()
+
+        if out == "not logged in": #Error message from script, try login script
+            p = subprocess.Popen(['casperjs', 
+                                '../scripts/soundcloud_login.js'],
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
         tips = json.loads(out.decode('utf-8'))
         print("Successfully scraped notifications")
         
