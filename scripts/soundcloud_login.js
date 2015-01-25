@@ -184,8 +184,6 @@ casper.waitForSelector('.ownActivity', function() {
 
 });
 
-casper.wait(30000); //Wait 30 seconds before next refresh
-
 casper.run();
 
 //GET all notifications
