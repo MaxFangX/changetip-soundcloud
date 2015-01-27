@@ -107,9 +107,9 @@ def run():
         bot.last_context_uid = highest_context_uid
     print("==Updated bot.last_context_uid")
     print("====Finished cycle\n")
+    time.sleep(bot.new_tip_check_delay)
 run()
 
 # Make False if you only want the script to run once
 while True:
-    time.sleep(bot.new_tip_check_delay)
     run()
