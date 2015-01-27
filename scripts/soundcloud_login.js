@@ -135,6 +135,7 @@ casper.waitForPopup(/connect\?/, function() {
             printIfEnabled('Somehow got a popup without captcha');
             captureIfEnabled('error2.png');
             casper.echo("error");
+            throw new Error("Somehow got a popup without captcha");
         } 
     });
 }, function() {
