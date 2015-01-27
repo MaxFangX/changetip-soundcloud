@@ -110,9 +110,7 @@ casper.wait(3000, function() {
     captureIfEnabled('1mainpage.png');
     printIfEnabled("POPUPS.LENGTH: "+ casper.popups.length);
 })
-casper.wait(3000, function(){});
-
-casper.then(function(){
+casper.wait(3000, function(){
     printIfEnabled("Checking if login popup still exists");
     printIfEnabled("popups.length: " + this.popups.length);
 });
