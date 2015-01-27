@@ -61,6 +61,7 @@ casper.waitForSelector('.header__login', function() {
     this.click('.header__login');
     printIfEnabled("Next - loading popup");
 }, function(){
+    casper.echo("error");
     throw new Error("Could not find login button");
 }, 30000);
 
@@ -73,6 +74,7 @@ casper.waitForPopup(/connect/, function() {
 }, function() {
     printIfEnabled("Waiting for popup timed out at 30 seconds.");
     printIfEnabled("Popups.length: " + this.popups.length);
+    casper.echo("error");
     throw new Error("Login popup didn't load");
 }, 30000);
 
@@ -126,11 +128,13 @@ casper.waitForPopup(/connect\?/, function() {
         })) 
         if(casper.exists('#recaptcha_area')){
             captureIfEnabled('error1.png');
+            casper.echo("error");
             throw new Error("Ran into recaptcha, use a proxy.");
         }
         else{
             printIfEnabled('Somehow got a popup without captcha');
             captureIfEnabled('error2.png');
+            casper.echo("error");
         } 
     });
 }, function() {
