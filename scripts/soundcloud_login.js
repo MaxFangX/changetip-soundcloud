@@ -151,10 +151,6 @@ casper.waitForPopup(/connect\?/, function() {
 }, 5000); //5 Seconds for popup to still be there
 
 //SCRAPING PAGE
-//TODO implement scraping page
-casper.reload(function() {
-    printIfEnabled("Reloaded notifications page");
-});
 
 casper.waitForSelector('.ownActivity', function() {
     printIfEnabled("Notifications page loaded, start SCRAPING");
