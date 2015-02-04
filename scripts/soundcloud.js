@@ -13,7 +13,7 @@ var casper = require('casper').create({
         loadImages: true,
         loadPlugins: true,
     },
-    verbose: false,
+    verbose: true,
     logLevel: "debug"
 });
 
@@ -24,7 +24,7 @@ var captureIfEnabled = function(filename) {
     }
 }
 
-var printEnabled = false; //Set to true for debugging script
+var printEnabled = true; //Set to true for debugging script
 var printIfEnabled = function(message) {
     if(printEnabled){
         console.log(message);
@@ -40,7 +40,7 @@ casper.on('page.error', function(msg, trace) {
 });
 
 casper.start('http://soundcloud.com/notifications', function(){
-
+    captureIfEnabled("isitonnotifications.png");
 });
 
 casper.waitForSelector('.ownActivity', function() {

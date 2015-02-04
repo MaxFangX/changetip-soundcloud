@@ -13,7 +13,7 @@ var casper = require('casper').create({
         loadImages: true,
         loadPlugins: true,
     },
-    verbose: false,
+    verbose: true,
     logLevel: "debug"
 });
 
@@ -24,7 +24,7 @@ var captureIfEnabled = function(filename) {
     }
 }
 
-var printEnabled = false; //Set to true for debugging script
+var printEnabled = true; //Set to true for debugging script
 var printIfEnabled = function(message) {
     if(printEnabled){
         console.log(message);
@@ -52,7 +52,7 @@ casper.start('http://soundcloud.com', function(){
         casper.exists('.userNav__username'));
     //Skips trying to log in if already logged in
     if(casper.exists('.g-tabs-item')){
-        casper.thenBypass(12);
+        casper.thenBypass(10);
     }
 });
 
@@ -76,7 +76,7 @@ casper.waitForPopup(/connect/, function() {
     printIfEnabled("Popups.length: " + this.popups.length);
     casper.echo("error");
     throw new Error("Login popup didn't load");
-}, 30000);
+}, 30001);
 
 casper.withPopup(/connect\?/, function() {
     printIfEnabled("**Filling out and submitting login form");
@@ -95,7 +95,7 @@ casper.withPopup(/connect\?/, function() {
     printIfEnabled("Next - clicking login button on popup");
 });
 
-casper.wait(3000, function() {});
+casper.wait(3003, function() {});
 
 casper.withPopup(/connect\?/, function() {
     printIfEnabled("Does login button exist?");
@@ -106,11 +106,11 @@ casper.withPopup(/connect\?/, function() {
     this.click('#authorize');
 });
 
-casper.wait(3000, function() {
+casper.wait(3002, function() {
     captureIfEnabled('1mainpage.png');
     printIfEnabled("POPUPS.LENGTH: "+ casper.popups.length);
 })
-casper.wait(3000, function(){
+casper.wait(3001, function(){
     printIfEnabled("Checking if login popup still exists");
     printIfEnabled("popups.length: " + this.popups.length);
 });
@@ -149,9 +149,12 @@ casper.waitForPopup(/connect\?/, function() {
     casper.thenOpen("http://soundcloud.com/notifications").waitForSelector('.ownActivity', function() {
                 captureIfEnabled('4final.png')
                 printIfEnabled("Notification title: " + this.getTitle());
+            }, function() {
+                captureIfEnable('notificationspage.png');
+                printIfEnabled("Line ~154 can't find .ownActivity");
             }
     );
-}, 5000); //5 Seconds for popup to still be there
+}, 5001); //5 Seconds for popup to still be there
 
 //SCRAPING PAGE
 
@@ -181,7 +184,10 @@ casper.waitForSelector('.ownActivity', function() {
     });
     casper.echo(output);
 
-});
+}, function() {
+    printIfEnabled("Failed to find .ownActivity.");
+    captureIfEnabled("findOwnActivity.png");
+}, 5002);
 
 casper.run();
 
