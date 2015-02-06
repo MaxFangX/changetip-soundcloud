@@ -40,6 +40,10 @@ casper.on('page.error', function(msg, trace) {
     printIfEnabled('Error: ' + msg, 'ERROR');
 });
 
+//=========Begin Script=========//
+
+
+/*
 casper.start('http://soundcloud.com', function(){
     // TODO investigate why getting to soundcloud.com sometimes
     // takes so long
