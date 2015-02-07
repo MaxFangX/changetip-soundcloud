@@ -107,38 +107,28 @@ casper.withPopup(/connect\?/, function() {
     printIfEnabled("106 Clicking login button on popup");
     this.click('#authorize');
 })
+
+
+casper.wait(5000).then(function() {
+    printIfEnabled("113 Back to main screen");
+    captureIfEnabled("117ShouldBeLoggedIn.png");
+    if(this.popups.length != 0){
+        printIfEnabled("**** 115 Warning: There are still " + this.popups.length + " popups on the page");
+    }
+    if(!this.exists('.g-tabs-item')) {
+        printIfEnabled('**** 119 Warning: .g-tabs-item not detected, should exist');
+    }
+})
+
+casper.thenOpen("https://soundcloud.com/notifications") {
+    printIfEnabled("124 On notifications page");
+    captureIfEnabled("125 Should be on notifications page");
+}
+
+
+
 /*
 
-casper.waitForPopup(/connect\?/, function() {
-    casper.withPopup(/connect\?/, function() {
-        captureIfEnabled('2popup.png');
-        printIfEnabled(this.evaluate(function() {
-            return document.title;
-        }))
-        printIfEnabled(this.evaluate(function() {
-            return document.querySelector('#recaptcha_area');
-        })) 
-        if(casper.exists('#recaptcha_area')){
-            captureIfEnabled('error1.png');
-            casper.echo("error");
-            throw new Error("Ran into recaptcha, use a proxy.");
-        }
-        else{
-            printIfEnabled('Somehow got a popup without captcha');
-            captureIfEnabled('error2.png');
-            casper.echo("error");
-            throw new Error("Somehow got a popup without captcha");
-        } 
-    });
-}, function() {
-    casper.then(function() {
-        printIfEnabled("****Logged in successfully!");
-        printIfEnabled("Popups length: " + this.popups.length)
-        captureIfEnabled('3loggedin.png')
-        printIfEnabled("Logged in title: " + this.evaluate(function() {
-            return document.title;
-        }));
-    });
 
     casper.thenOpen("http://soundcloud.com/notifications").waitForSelector('.ownActivity', function() {
                 captureIfEnabled('4final.png')
@@ -148,7 +138,7 @@ casper.waitForPopup(/connect\?/, function() {
                 printIfEnabled("Line ~154 can't find .ownActivity");
             }
     );
-}, 5001); //5 Seconds for popup to still be there
+
 
 //SCRAPING PAGE
 
