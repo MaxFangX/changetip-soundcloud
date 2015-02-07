@@ -43,8 +43,9 @@ casper.on('page.error', function(msg, trace) {
 //=========Begin Script=========//
 
 casper.start('http://soundcloud.com', function(){
-    captureIfEnabled('_isitloggedin.png');
-    printIfEnabled("Is .g-tabs-item detected: " + 
+    printIfEnabled("046 On home page, checking if logged in");
+    captureIfEnabled('047_isitloggedin.png');
+    printIfEnabled("048 Is .g-tabs-item detected: " + 
         casper.exists('.g-tabs-item'));
     //Skips trying to log in if already logged in
     // if(casper.exists('.g-tabs-item')){
@@ -54,34 +55,22 @@ casper.start('http://soundcloud.com', function(){
 
 casper.waitForSelector('.header__login', function() {
     this.click('.header__login');
-}, function() { //Could not find login button
+    printIfEnabled("058 Clicked login button on homepage");
+}, function() { 
+    printIfEnabled("060 Could not find login button on homepage");
     casper.echo("error");
     throw new Error("Could not find login button");
-}, 30000) // 30 second timeout
+}, 30000); // 30 second timeout
+
+casper.waitForPopup(/connect/, function() {
+    printIfEnabled("066 Loaded login popup");
+}, function() {
+    printIfEnabled("068 Could not find popup");
+    casper.echo("error");
+    throw new Error("could not find popup");
+}, 31000);
 
 /*
-
-casper.waitForSelector('.header__login', function() {
-    printIfEnabled("**Clicked login button.");
-    this.click('.header__login');
-    printIfEnabled("Next - loading popup");
-}, function(){
-    casper.echo("error");
-    throw new Error("Could not find login button");
-}, 30000);
-
-//STEP 6
-casper.waitForPopup(/connect/, function() {
-    printIfEnabled('**Loaded login popup.');
-    printIfEnabled("casper.popups length: " + casper.popups.length);
-    printIfEnabled("casper.popups[0]: " + casper.popups[0]);
-    printIfEnabled("Next - filling out form");
-}, function() {
-    printIfEnabled("Waiting for popup timed out at 30 seconds.");
-    printIfEnabled("Popups.length: " + this.popups.length);
-    casper.echo("error");
-    throw new Error("Login popup didn't load");
-}, 30001);
 
 casper.withPopup(/connect\?/, function() {
     printIfEnabled("**Filling out and submitting login form");
