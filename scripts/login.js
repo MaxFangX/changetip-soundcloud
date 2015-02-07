@@ -72,14 +72,14 @@ casper.waitForPopup(/connect/, function() {
 
 casper.then(function(){
     if(this.popups.length != 1){
-        printIfEnabled("**** 075 Warning; there are " + this.popups.length + "popups");
+        printIfEnabled("**** 075 Warning: there are " + this.popups.length + "popups");
     }
 })
 
 casper.withPopup(/connect\?/, function() {
     printIfEnabled("080 withPopup");
     if(!this.exists('#oauth2-login-form')){
-        printIfEnabled("082 Could not find login form on popup");
+        printIfEnabled("**** 082 Warning: Could not find login form on popup");
         casper.echo("error");
         throw new Error("could not find login form on popup");
     }
@@ -92,19 +92,16 @@ casper.withPopup(/connect\?/, function() {
                     this.evaluate(function()  {
                         return document.querySelector('#username').value;
                     }));
+    if(!this.exists('#authorize')){
+        printIfEnabled("**** 096 Warning: Could not find submit button on popup");
+        casper.echo("error");
+        throw new Error("could not find submit button on popup");
+    }
+    printIfEnabled("100 Clicking login button on popup");
+    captureIfEnabled("101BeforeClickingLoginButtonOnPopup");
+    this.click('#authorize');
 })
 /*
-
-casper.wait(3003, function() {});
-
-casper.withPopup(/connect\?/, function() {
-    printIfEnabled("Does login button exist?");
-    if(this.exists('#authorize')){
-        printIfEnabled("Login button exists");
-    };
-    captureIfEnabled('0beforesubmit.png')
-    this.click('#authorize');
-});
 
 casper.wait(3002, function() {
     captureIfEnabled('1mainpage.png');
