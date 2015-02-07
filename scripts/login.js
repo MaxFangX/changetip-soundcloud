@@ -131,26 +131,20 @@ casper.waitForSelector('.ownActivity', function() {
 }, function() {
     printIfEnabled("******** Error: Could not find .ownActivity")
 })
-/*
 
-//SCRAPING PAGE
+casper.wait(3000).then(function() {
+    printIfEnabled("136 Starting scraping!");
+    captureIfEnabled("137JustBeforeScraping.png");
 
-casper.waitForSelector('.ownActivity', function() {
-    printIfEnabled("Notifications page loaded, start SCRAPING");
-    //Screenshot with unique timestamp for every time the page refreshes
-    captureIfEnabled('5startscraping.png');
-    //Scrape info
+    // evaluate() runs javascript on page
     var output = this.evaluate(function() {
-        //Scrape links to comments
+        // links is an array of notifications
         var links = document.querySelectorAll('.ownActivity.comment .sc-link-light');
-        var result = {}
+        var result = {} // Output is a JSON object
         for(var i = 0; i < links.length; i++){
             var context_url = links[i].href;
-            // TODO determine if tip is maxtipbot's own comment
-
-            console.log("context_url: " + context_url);
-            
-            //Add info to result to output as JSON object
+            console.log("context_url scraped: " + context_url);
+            // Add context_url to meta of tip_result
             result[i] = {};
             result[i]['meta'] = {
                 'context_url': context_url,
@@ -160,63 +154,6 @@ casper.waitForSelector('.ownActivity', function() {
         return result;
     });
     casper.echo(output);
-
-}, function() {
-    printIfEnabled("Failed to find .ownActivity.");
-    captureIfEnabled("findOwnActivity.png");
-}, 5002);
+});
 
 casper.run();
-
-//GET all notifications
-//  ('.ownActivity')
-//returns an array
-
-//GET all mention notifications
-//  document.querySelectorAll('.ownActivity.comment')
-//returns an array
-
-//GET link to commenter profile
-//  document.querySelector('.ownActivity.comment .userAvatarBadge__avatarLink').href
-//returns "http://soundcloud.com/maxtipper"
-
-//GET sender username
-//  document.querySelector('.ownActivity.comment .userBadge__usernameLink').innerHTML
-//or
-//  document.querySelector('.ownActivity.comment').children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
-//returns "maxtipper"
-
-//GET link to comment including comment id
-//  document.querySelector('.ownActivity.comment .sc-link-light').href
-//or 
-//  document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[1].children[0].href
-//returns:
-//  "https://soundcloud.com/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
-
-//GET link without 'http://soundcloud.com/'
-//  context_url.substr(23)
-//returns:
-//  "maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
-
-//GET context_uid
-//  context_url.substr(context_url.lastIndexOf("/")+9)
-//returns "215516189"
-
-//GET receiver
-//  context_url.substr(23, context_url.substr(23).indexOf('/'))
-//returns "maxtippee"
-
-//GET track_url
-//  context_url.substring(0, context_url.lastIndexOf('/')).substring(context_url.substring(0, context_url.lastIndexOf('/')).lastIndexOf('/')+1)
-//returns 'pure-imagination-for-marimba-evan-jose'
-
-//Get message + example output
-//  document.querySelector('.ownActivity.comment .commentTitle__quotedBody').innerHTML
-//or
-//  document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[0].children[1].innerHTML
-//returns: 
-// "
-      
-//         @<a href="/maxtippee">maxtippee</a>: 103 bits
-      
-//     "
