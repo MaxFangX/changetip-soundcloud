@@ -121,10 +121,12 @@ casper.wait(5000).then(function() {
     }
 })
 
-casper.thenOpen("https://soundcloud.com/notifications") {
+casper.thenOpen("https://soundcloud.com/notifications");
+
+casper.then(function() {
     printIfEnabled("124 On notifications page");
     captureIfEnabled("125ShouldBeOnNotificationsPage.png");
-}
+});
 
 casper.waitForSelector('.ownActivity', function() {
     printIfEnabled("129 Notifications loaded");
