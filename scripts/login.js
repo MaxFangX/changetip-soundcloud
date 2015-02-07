@@ -57,7 +57,7 @@ casper.waitForSelector('.header__login', function() {
     this.click('.header__login');
     printIfEnabled("058 Clicked login button on homepage");
 }, function() { 
-    printIfEnabled("060 Could not find login button on homepage");
+    printIfEnabled("******** 060 Error: Could not find login button on homepage");
     casper.echo("error");
     throw new Error("Could not find login button");
 }, 30000); // 30 second timeout
@@ -65,7 +65,7 @@ casper.waitForSelector('.header__login', function() {
 casper.waitForPopup(/connect/, function() {
     printIfEnabled("066 Loaded login popup");
 }, function() {
-    printIfEnabled("068 Could not find popup");
+    printIfEnabled("******** 068 Error: Could not find popup");
     casper.echo("error");
     throw new Error("could not find popup");
 }, 31000);
@@ -80,7 +80,7 @@ casper.withPopup(/connect\?/, function() {
     printIfEnabled("080 withPopup");
     captureIfEnabled("081_PopupBeforeClickingLoginButton.png");
     if(!this.exists('#oauth2-login-form')){
-        printIfEnabled("**** 082 Warning: Could not find login form on popup");
+        printIfEnabled("******** 082 Error: Could not find login form on popup");
         casper.echo("error");
         throw new Error("could not find login form on popup");
     }
@@ -95,12 +95,13 @@ casper.withPopup(/connect\?/, function() {
         })
     );
     if(casper.exists('#recaptcha_area')){
+        printIfEnabled("******** 098 Error: Ran into captcha");
         captureIfEnabled('097_CaptchaAreaFound.png');
         casper.echo("error");
-        throw new Error("ran into recaptcha");
+        throw new Error("ran into captcha");
     }
     if(!this.exists('#authorize')){
-        printIfEnabled("**** 102 Warning: Could not find submit button on popup");
+        printIfEnabled("******** 102 Error: Could not find submit button on popup");
         casper.echo("error");
         throw new Error("could not find submit button on popup");
     }
@@ -122,23 +123,15 @@ casper.wait(5000).then(function() {
 
 casper.thenOpen("https://soundcloud.com/notifications") {
     printIfEnabled("124 On notifications page");
-    captureIfEnabled("125 Should be on notifications page");
+    captureIfEnabled("125ShouldBeOnNotificationsPage.png");
 }
 
-
-
+casper.waitForSelector('.ownActivity', function() {
+    printIfEnabled("129 Notifications loaded");
+}, function() {
+    printIfEnabled("******** Error: Could not find .ownActivity")
+})
 /*
-
-
-    casper.thenOpen("http://soundcloud.com/notifications").waitForSelector('.ownActivity', function() {
-                captureIfEnabled('4final.png')
-                printIfEnabled("Notification title: " + this.getTitle());
-            }, function() {
-                captureIfEnable('notificationspage.png');
-                printIfEnabled("Line ~154 can't find .ownActivity");
-            }
-    );
-
 
 //SCRAPING PAGE
 
