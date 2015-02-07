@@ -70,24 +70,30 @@ casper.waitForPopup(/connect/, function() {
     throw new Error("could not find popup");
 }, 31000);
 
-/*
+casper.then(function(){
+    if(this.popups.length != 1){
+        printIfEnabled("**** 075 Warning; there are " + this.popups.length + "popups");
+    }
+})
 
 casper.withPopup(/connect\?/, function() {
-    printIfEnabled("**Filling out and submitting login form");
-    printIfEnabled("Does oauth2 form exist?")
-    if(this.exists('#oauth2-login-form')){
-        printIfEnabled("oauth2 form exists");
-    };
+    printIfEnabled("080 withPopup");
+    if(!this.exists('#oauth2-login-form')){
+        printIfEnabled("082 Could not find login form on popup");
+        casper.echo("error");
+        throw new Error("could not find login form on popup");
+    }
+    printIfEnabled("086 Filling form");
     this.fillSelectors('#oauth2-login-form', {
         'input[id="username"]': user,
         'input[id="password"]': pass,
     }, false);
-    printIfEnabled("Printing username form value: ");
-    printIfEnabled(this.evaluate(function() {
-        return document.querySelector('#username').value;
-    }));
-    printIfEnabled("Next - clicking login button on popup");
-});
+    printIfEnabled("091 Username form value: " + 
+                    this.evaluate(function()  {
+                        return document.querySelector('#username').value;
+                    }));
+})
+/*
 
 casper.wait(3003, function() {});
 
