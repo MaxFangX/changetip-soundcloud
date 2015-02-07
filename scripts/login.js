@@ -42,24 +42,24 @@ casper.on('page.error', function(msg, trace) {
 
 //=========Begin Script=========//
 
-
-/*
 casper.start('http://soundcloud.com', function(){
-    // TODO investigate why getting to soundcloud.com sometimes
-    // takes so long
-    printIfEnabled("**Got to SoundCloud homepage.");
-    printIfEnabled("Title: "+ this.getTitle());
-    printIfEnabled("Next - clicking login button");
     captureIfEnabled('_isitloggedin.png');
     printIfEnabled("Is .g-tabs-item detected: " + 
         casper.exists('.g-tabs-item'));
-    printIfEnabled("Is .userNav__username detected: " +
-        casper.exists('.userNav__username'));
     //Skips trying to log in if already logged in
-    if(casper.exists('.g-tabs-item')){
-        casper.thenBypass(10);
-    }
+    // if(casper.exists('.g-tabs-item')){
+    //     casper.thenBypass(10);
+    // }
 });
+
+casper.waitForSelector('.header__login', function() {
+    this.click('.header__login');
+}, function() { //Could not find login button
+    casper.echo("error");
+    throw new Error("Could not find login button");
+}, 30000) // 30 second timeout
+
+/*
 
 casper.waitForSelector('.header__login', function() {
     printIfEnabled("**Clicked login button.");
