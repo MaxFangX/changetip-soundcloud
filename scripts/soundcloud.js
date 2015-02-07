@@ -18,14 +18,14 @@ var casper = require('casper').create({
     logLevel: "debug"
 });
 
-var captureEnabled = true;
+var captureEnabled = false;
 var captureIf = function(filename) {
     if(captureEnabled){
         casper.capture(filename);
     }
 }
 
-var printEnabled = true; //Set to true for debugging script
+var printEnabled = false; //Set to true for debugging script
 var printIf = function(message) {
     if(printEnabled){
         console.log(message);
@@ -41,26 +41,23 @@ casper.on('page.error', function(msg, trace) {
 });
 
 casper.start('http://soundcloud.com/notifications', function(){
-    captureIf("isitonnotifications.png");
+    printIf("044 Attempting to open notifications page")
+    captureIf("_IsItOnNotifications.png");
 });
 
 casper.waitForSelector('.ownActivity', function() {
-    captureIf('4final.png')
-    printIf("Notification title: " + this.getTitle());
-    printIf("Notifications page loaded, start SCRAPING");
-    captureIf('5startscraping.png');
-    //Scrape info
+    printIf("068 Starting scraping!");
+    captureIf("69JustBeforeScraping.png");
+
+    // evaluate() runs javascript on page
     var output = this.evaluate(function() {
-        //Scrape links to comments
+        // links is an array of notifications
         var links = document.querySelectorAll('.ownActivity.comment .sc-link-light');
-        var result = {}
+        var result = {} // Output is a JSON object
         for(var i = 0; i < links.length; i++){
             var context_url = links[i].href;
-            // TODO determine if tip is maxtipbot's own comment
-
-            console.log("context_url: " + context_url);
-            
-            //Add info to result to output as JSON object
+            console.log("context_url scraped: " + context_url);
+            // Add context_url to meta of tip_result
             result[i] = {};
             result[i]['meta'] = {
                 'context_url': context_url,
@@ -72,60 +69,8 @@ casper.waitForSelector('.ownActivity', function() {
     casper.echo(output);
 
 }, function(){
+    casper.printIf("**** 072 Warning, not logged in, should be caught");
     casper.echo("not logged in");
 }, 10000);
 
 casper.run();
-
-//GET all notifications
-//  ('.ownActivity')
-//returns an array
-
-//GET all mention notifications
-//  document.querySelectorAll('.ownActivity.comment')
-//returns an array
-
-//GET link to commenter profile
-//  document.querySelector('.ownActivity.comment .userAvatarBadge__avatarLink').href
-//returns "http://soundcloud.com/maxtipper"
-
-//GET sender username
-//  document.querySelector('.ownActivity.comment .userBadge__usernameLink').innerHTML
-//or
-//  document.querySelector('.ownActivity.comment').children[1].children[0].children[0].children[0].children[1].children[0].children[0].children[0].text
-//returns "maxtipper"
-
-//GET link to comment including comment id
-//  document.querySelector('.ownActivity.comment .sc-link-light').href
-//or 
-//  document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[1].children[0].href
-//returns:
-//  "https://soundcloud.com/maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
-
-//GET link without 'http://soundcloud.com/'
-//  context_url.substr(23)
-//returns:
-//  "maxtippee/pure-imagination-for-marimba-evan-jose/comment-215516189"
-
-//GET context_uid
-//  context_url.substr(context_url.lastIndexOf("/")+9)
-//returns "215516189"
-
-//GET receiver
-//  context_url.substr(23, context_url.substr(23).indexOf('/'))
-//returns "maxtippee"
-
-//GET track_url
-//  context_url.substring(0, context_url.lastIndexOf('/')).substring(context_url.substring(0, context_url.lastIndexOf('/')).lastIndexOf('/')+1)
-//returns 'pure-imagination-for-marimba-evan-jose'
-
-//Get message + example output
-//  document.querySelector('.ownActivity.comment .commentTitle__quotedBody').innerHTML
-//or
-//  document.querySelector('.ownActivity.comment').children[1].children[1].children[0].children[0].children[1].innerHTML
-//returns: 
-// "
-      
-//         @<a href="/maxtippee">maxtippee</a>: 103 bits
-      
-//     "
