@@ -47,7 +47,7 @@ casper.start('http://soundcloud.com', function(){
     captureIfEnabled('047_isitloggedin.png');
     printIfEnabled("048 Is .g-tabs-item detected: " + 
         casper.exists('.g-tabs-item'));
-    //Skips trying to log in if already logged in
+    // Skips trying to log in if already logged in
     // if(casper.exists('.g-tabs-item')){
     //     casper.thenBypass(10);
     // }
@@ -78,6 +78,7 @@ casper.then(function(){
 
 casper.withPopup(/connect\?/, function() {
     printIfEnabled("080 withPopup");
+    captureIfEnabled("081_PopupBeforeClickingLoginButton.png");
     if(!this.exists('#oauth2-login-form')){
         printIfEnabled("**** 082 Warning: Could not find login form on popup");
         casper.echo("error");
@@ -89,28 +90,24 @@ casper.withPopup(/connect\?/, function() {
         'input[id="password"]': pass,
     }, false);
     printIfEnabled("091 Username form value: " + 
-                    this.evaluate(function()  {
-                        return document.querySelector('#username').value;
-                    }));
+        this.evaluate(function()  {
+            return document.querySelector('#username').value;
+        })
+    );
+    if(casper.exists('#recaptcha_area')){
+        captureIfEnabled('097_CaptchaAreaFound.png');
+        casper.echo("error");
+        throw new Error("ran into recaptcha");
+    }
     if(!this.exists('#authorize')){
-        printIfEnabled("**** 096 Warning: Could not find submit button on popup");
+        printIfEnabled("**** 102 Warning: Could not find submit button on popup");
         casper.echo("error");
         throw new Error("could not find submit button on popup");
     }
-    printIfEnabled("100 Clicking login button on popup");
-    captureIfEnabled("101BeforeClickingLoginButtonOnPopup");
+    printIfEnabled("106 Clicking login button on popup");
     this.click('#authorize');
 })
 /*
-
-casper.wait(3002, function() {
-    captureIfEnabled('1mainpage.png');
-    printIfEnabled("POPUPS.LENGTH: "+ casper.popups.length);
-})
-casper.wait(3001, function(){
-    printIfEnabled("Checking if login popup still exists");
-    printIfEnabled("popups.length: " + this.popups.length);
-});
 
 casper.waitForPopup(/connect\?/, function() {
     casper.withPopup(/connect\?/, function() {
