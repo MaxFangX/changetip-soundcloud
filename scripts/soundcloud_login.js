@@ -19,37 +19,37 @@ var casper = require('casper').create({
 });
 
 var captureEnabled = true;
-var captureIfEnabled = function(filename) {
+var captureIf = function(filename) {
     if(captureEnabled){
         casper.capture(filename);
     }
 }
 
 var printEnabled = true; //Set to true for debugging script
-var printIfEnabled = function(message) {
+var printIf = function(message) {
     if(printEnabled){
         console.log(message);
     }
 }
 
 casper.on('remote.message', function(msg) {
-    printIfEnabled('REMOTE: ' + msg);
+    printIf('REMOTE: ' + msg);
 });
 
 casper.on('page.error', function(msg, trace) {
-    printIfEnabled('Error: ' + msg, 'ERROR');
+    printIf('Error: ' + msg, 'ERROR');
 });
 
 casper.start('http://soundcloud.com', function(){
     // TODO investigate why getting to soundcloud.com sometimes
     // takes so long
-    printIfEnabled("**Got to SoundCloud homepage.");
-    printIfEnabled("Title: "+ this.getTitle());
-    printIfEnabled("Next - clicking login button");
-    captureIfEnabled('_isitloggedin.png');
-    printIfEnabled("Is .g-tabs-item detected: " + 
+    printIf("**Got to SoundCloud homepage.");
+    printIf("Title: "+ this.getTitle());
+    printIf("Next - clicking login button");
+    captureIf('_isitloggedin.png');
+    printIf("Is .g-tabs-item detected: " + 
         casper.exists('.g-tabs-item'));
-    printIfEnabled("Is .userNav__username detected: " +
+    printIf("Is .userNav__username detected: " +
         casper.exists('.userNav__username'));
     //Skips trying to log in if already logged in
     if(casper.exists('.g-tabs-item')){
@@ -58,9 +58,9 @@ casper.start('http://soundcloud.com', function(){
 });
 
 casper.waitForSelector('.header__login', function() {
-    printIfEnabled("**Clicked login button.");
+    printIf("**Clicked login button.");
     this.click('.header__login');
-    printIfEnabled("Next - loading popup");
+    printIf("Next - loading popup");
 }, function(){
     casper.echo("error");
     throw new Error("Could not find login button");
@@ -68,91 +68,91 @@ casper.waitForSelector('.header__login', function() {
 
 //STEP 6
 casper.waitForPopup(/connect/, function() {
-    printIfEnabled('**Loaded login popup.');
-    printIfEnabled("casper.popups length: " + casper.popups.length);
-    printIfEnabled("casper.popups[0]: " + casper.popups[0]);
-    printIfEnabled("Next - filling out form");
+    printIf('**Loaded login popup.');
+    printIf("casper.popups length: " + casper.popups.length);
+    printIf("casper.popups[0]: " + casper.popups[0]);
+    printIf("Next - filling out form");
 }, function() {
-    printIfEnabled("Waiting for popup timed out at 30 seconds.");
-    printIfEnabled("Popups.length: " + this.popups.length);
+    printIf("Waiting for popup timed out at 30 seconds.");
+    printIf("Popups.length: " + this.popups.length);
     casper.echo("error");
     throw new Error("Login popup didn't load");
 }, 30001);
 
 casper.withPopup(/connect\?/, function() {
-    printIfEnabled("**Filling out and submitting login form");
-    printIfEnabled("Does oauth2 form exist?")
+    printIf("**Filling out and submitting login form");
+    printIf("Does oauth2 form exist?")
     if(this.exists('#oauth2-login-form')){
-        printIfEnabled("oauth2 form exists");
+        printIf("oauth2 form exists");
     };
     this.fillSelectors('#oauth2-login-form', {
         'input[id="username"]': user,
         'input[id="password"]': pass,
     }, false);
-    printIfEnabled("Printing username form value: ");
-    printIfEnabled(this.evaluate(function() {
+    printIf("Printing username form value: ");
+    printIf(this.evaluate(function() {
         return document.querySelector('#username').value;
     }));
-    printIfEnabled("Next - clicking login button on popup");
+    printIf("Next - clicking login button on popup");
 });
 
 casper.wait(3003, function() {});
 
 casper.withPopup(/connect\?/, function() {
-    printIfEnabled("Does login button exist?");
+    printIf("Does login button exist?");
     if(this.exists('#authorize')){
-        printIfEnabled("Login button exists");
+        printIf("Login button exists");
     };
-    captureIfEnabled('0beforesubmit.png')
+    captureIf('0beforesubmit.png')
     this.click('#authorize');
 });
 
 casper.wait(3002, function() {
-    captureIfEnabled('1mainpage.png');
-    printIfEnabled("POPUPS.LENGTH: "+ casper.popups.length);
+    captureIf('1mainpage.png');
+    printIf("POPUPS.LENGTH: "+ casper.popups.length);
 })
 casper.wait(3001, function(){
-    printIfEnabled("Checking if login popup still exists");
-    printIfEnabled("popups.length: " + this.popups.length);
+    printIf("Checking if login popup still exists");
+    printIf("popups.length: " + this.popups.length);
 });
 
 casper.waitForPopup(/connect\?/, function() {
     casper.withPopup(/connect\?/, function() {
-        captureIfEnabled('2popup.png');
-        printIfEnabled(this.evaluate(function() {
+        captureIf('2popup.png');
+        printIf(this.evaluate(function() {
             return document.title;
         }))
-        printIfEnabled(this.evaluate(function() {
+        printIf(this.evaluate(function() {
             return document.querySelector('#recaptcha_area');
         })) 
         if(casper.exists('#recaptcha_area')){
-            captureIfEnabled('error1.png');
+            captureIf('error1.png');
             casper.echo("error");
             throw new Error("Ran into recaptcha, use a proxy.");
         }
         else{
-            printIfEnabled('Somehow got a popup without captcha');
-            captureIfEnabled('error2.png');
+            printIf('Somehow got a popup without captcha');
+            captureIf('error2.png');
             casper.echo("error");
             throw new Error("Somehow got a popup without captcha");
         } 
     });
 }, function() {
     casper.then(function() {
-        printIfEnabled("****Logged in successfully!");
-        printIfEnabled("Popups length: " + this.popups.length)
-        captureIfEnabled('3loggedin.png')
-        printIfEnabled("Logged in title: " + this.evaluate(function() {
+        printIf("****Logged in successfully!");
+        printIf("Popups length: " + this.popups.length)
+        captureIf('3loggedin.png')
+        printIf("Logged in title: " + this.evaluate(function() {
             return document.title;
         }));
     });
 
     casper.thenOpen("http://soundcloud.com/notifications").waitForSelector('.ownActivity', function() {
-                captureIfEnabled('4final.png')
-                printIfEnabled("Notification title: " + this.getTitle());
+                captureIf('4final.png')
+                printIf("Notification title: " + this.getTitle());
             }, function() {
                 captureIfEnable('notificationspage.png');
-                printIfEnabled("Line ~154 can't find .ownActivity");
+                printIf("Line ~154 can't find .ownActivity");
             }
     );
 }, 5001); //5 Seconds for popup to still be there
@@ -160,9 +160,9 @@ casper.waitForPopup(/connect\?/, function() {
 //SCRAPING PAGE
 
 casper.waitForSelector('.ownActivity', function() {
-    printIfEnabled("Notifications page loaded, start SCRAPING");
+    printIf("Notifications page loaded, start SCRAPING");
     //Screenshot with unique timestamp for every time the page refreshes
-    captureIfEnabled('5startscraping.png');
+    captureIf('5startscraping.png');
     //Scrape info
     var output = this.evaluate(function() {
         //Scrape links to comments
@@ -186,8 +186,8 @@ casper.waitForSelector('.ownActivity', function() {
     casper.echo(output);
 
 }, function() {
-    printIfEnabled("Failed to find .ownActivity.");
-    captureIfEnabled("findOwnActivity.png");
+    printIf("Failed to find .ownActivity.");
+    captureIf("findOwnActivity.png");
 }, 5002);
 
 casper.run();

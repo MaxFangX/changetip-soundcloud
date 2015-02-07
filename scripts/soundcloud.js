@@ -19,36 +19,36 @@ var casper = require('casper').create({
 });
 
 var captureEnabled = true;
-var captureIfEnabled = function(filename) {
+var captureIf = function(filename) {
     if(captureEnabled){
         casper.capture(filename);
     }
 }
 
 var printEnabled = true; //Set to true for debugging script
-var printIfEnabled = function(message) {
+var printIf = function(message) {
     if(printEnabled){
         console.log(message);
     }
 }
 
 casper.on('remote.message', function(msg) {
-    printIfEnabled('REMOTE: ' + msg);
+    printIf('REMOTE: ' + msg);
 });
 
 casper.on('page.error', function(msg, trace) {
-    printIfEnabled('Error: ' + msg, 'ERROR');
+    printIf('Error: ' + msg, 'ERROR');
 });
 
 casper.start('http://soundcloud.com/notifications', function(){
-    captureIfEnabled("isitonnotifications.png");
+    captureIf("isitonnotifications.png");
 });
 
 casper.waitForSelector('.ownActivity', function() {
-    captureIfEnabled('4final.png')
-    printIfEnabled("Notification title: " + this.getTitle());
-    printIfEnabled("Notifications page loaded, start SCRAPING");
-    captureIfEnabled('5startscraping.png');
+    captureIf('4final.png')
+    printIf("Notification title: " + this.getTitle());
+    printIf("Notifications page loaded, start SCRAPING");
+    captureIf('5startscraping.png');
     //Scrape info
     var output = this.evaluate(function() {
         //Scrape links to comments

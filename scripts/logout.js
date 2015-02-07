@@ -13,32 +13,32 @@ var casper = require('casper').create({
 });
 
 var captureEnabled = true; // Set to true for debugging script
-var captureIfEnabled = function(filename) {
+var captureIf = function(filename) {
     if(captureEnabled){
         casper.capture(filename);
     }
 }
 
 var printEnabled = true; //Set to true for debugging script
-var printIfEnabled = function(message) {
+var printIf = function(message) {
     if(printEnabled){
         console.log(message);
     }
 }
 
 casper.on('remote.message', function(msg) {
-    printIfEnabled('REMOTE: ' + msg);
+    printIf('REMOTE: ' + msg);
 });
 
 casper.on('page.error', function(msg, trace) {
-    printIfEnabled('Error: ' + msg, 'ERROR');
+    printIf('Error: ' + msg, 'ERROR');
 });
 
 //=========Begin Script=========//
 
 casper.start('http://soundcloud.com/logout', function(){
-    printIfEnabled("Logged out");
-    captureIfEnabled('_ShouldBeLoggedOut.png');
+    printIf("Logged out");
+    captureIf('_ShouldBeLoggedOut.png');
 });
 
 casper.run();
